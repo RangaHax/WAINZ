@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from mezzanine.core.views import direct_to_template
-
+from django.contrib.auth import views as auth_views
 
 admin.autodiscover()
 
@@ -21,20 +21,12 @@ urlpatterns = patterns("",
     url(r'^image/submission_details/$', 'wainz.forms.submission_details'),
     
     
-    #login pages
-    url(r'^login/$', 'django.contrib.auth.views.login', {
-    'template_name': 'wainz/login.html'
-    }),
+  
     url(r'^logout/$', 'django.contrib.auth.views.logout',
                           {'next_page': '/'}),
-    url(r'^register/$', 'django.contrib.auth.views.password_change', {
-    'template_name': 'wainz/register.html'
-    }),
     
     url(r'^gallery/', 'wainz.views.imggallery'),
     
-    #JSON Export
-    url(r'^api/export/$', 'wainz.rest.export'),
     
     #Approval - Images
     url(r'^approve/$','wainz.views.approve_images'),
@@ -43,9 +35,8 @@ urlpatterns = patterns("",
     
     #custom wainz - view
     url(r'^image/(?P<img_id>\d+)/$', 'wainz.views.image'),
-    url(r'^add_comment/$', 'wainz.views.add_comment'),
     url(r'^add_tag/$', 'wainz.views.add_tag'),
-    url(r'^map/$','wainz.views.maps'),
+    
     
     
     #Captcha URLS
@@ -93,7 +84,7 @@ urlpatterns = patterns("",
     # page tree in the admin if it was installed.
 
     # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
-
+    (r'^accounts/', include('registration.backends.default.urls')),
     # MEZZANINE'S URLS
     # ----------------
     # ADD YOUR OWN URLPATTERNS *ABOVE* THE LINE BELOW.
@@ -122,10 +113,8 @@ urlpatterns = patterns("",
     # need to use the ``SITE_PREFIX`` setting as well.
 
     # ("^%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
-
-
+    
 )
-
 # Adds ``STATIC_URL`` to the context of error pages, so that error
 # pages can use JS, CSS and images.
 handler404 = "mezzanine.core.views.page_not_found"

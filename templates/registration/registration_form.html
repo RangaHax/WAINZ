@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main %}
+<div id="ranga-padding">
+<h2 class='featurette-heading'>Register</h2>
+<form method="post" action=".">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <input class='btn btn-large btn-primary' type="submit" value="{% trans 'Submit' %}" />
+</form>
+<div class="ranga-top"></div>
+{% endblock %}
