@@ -227,6 +227,7 @@ INSTALLED_APPS = (
     "wainz",
     "voting",
     "captcha",
+    "registration",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
