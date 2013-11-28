@@ -36,8 +36,10 @@ urlpatterns = patterns("",
     #custom wainz - view
     url(r'^image/(?P<img_id>\d+)/$', 'wainz.views.image'),
     url(r'^add_tag/$', 'wainz.views.add_tag'),
+    url(r'^map/$','wainz.views.maps'),
     
-    
+    #JSON Export
+    url(r'^api/export/$', 'wainz.rest.export'),
     
     #Captcha URLS
     url(r'^captcha/', include('captcha.urls')),
