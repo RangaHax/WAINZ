@@ -1,0 +1,255 @@
+from django.http import HttpRequest, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from wainz.models import Image, Tag
+from django.contrib.auth.models import User
+from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
+from django.core.urlresolvers import reverse
+import search_utils
+from django.conf import settings
+
+import time
+import json
+import os
+import base64
+import random
+import tag_utils
+
+
+@csrf_exempt
+def image(request):
+    """
+    A RESTful image resource endpoint.
+      * GET: currently will result in error status 405, request method not allowed
+      * PUT: currently will result in error status 405, request method not allowed
+      * POST: stores an image to the data base and returns success, or returns one of:
+             * 415 Unsupported media; image filetype cannot be interpreted as base64 json
+             * 400 Bad request: request syntax did not match API grammar
+      * PATCH: returns 405, method not allowed
+      * DELETE: returns 405, method not allowed
+      * CONNECT: returns 405, method not allowed
+      * TRACE: as per standard, returns the request as seen by the server
+      * OPTIONS: as per standard, returns possible uri requests resulting from a 
+                 successful call to this uri
+    """
+    print 'image request found'
+    #Request types we are not going to support through an id-less request
+    #if a user wants to GET images, they should instead OPTIONS a /user resource
+    #and follow the supplied uris
+    if request.method == 'GET' or request.method == 'PUT' or request.method == 'PATCH' or request.method == 'DELETE' or request.method == 'CONNECT':
+
+        respDict = {}
+        respDict["status"] = "ERROR"
+        respDict["error_message"] = "Incorrect request method (expected POST)"
+        respDict["url"] = request.build_absolute_uri()
+
+        responseData = json.dumps(respDict)
+        response = HttpResponse(responseData, "application/json", 405)
+
+        return response
+    if request.method == 'OPTIONS':
+        respDict = {}
+        respDict["status"] = "ERROR"
+        respDict["error_message"] = "Request verb not implemented"
+        respDict["url"] = request.build_absolute_uri()
+        responseData = json.dumps(respDict)
+        response = HttpResponse(responseData, "application/json", 501)
+        return response
+
+    if request.method == 'TRACE':
+        #TODO - return any data that may have been sent with request
+        return response(request.build_full_uri(), "text/plain", 200)
+
+    if request.method == 'POST':
+
+        try:
+
+          #We first do a bunch of validity checks to pull the relevant information
+          #from the JSON passed in.
+          try:
+              jsonDict = json.loads(request.body)
+          except Exception as e:
+              log_error(e)
+              return image_failure(request, "The value for HTTP body could not be interpreted as a valid JSON structure")
+          img = Image()
+          if "timestamp" not in jsonDict:
+              return image_failure(request, "Could not find required key 'timestamp' in input")
+          try:
+              submission_date = datetime.fromtimestamp(float(jsonDict["timestamp"]))        
+          except Exception as e:
+              log_error(e)
+              return image_failure(request, "Could not translate provided timestamp value to valid timestamp")
+          if "geolocation" not in jsonDict:
+              return image_failure(request, "Could not find required key 'geolocation' in input")       
+          geodict = jsonDict["geolocation"]
+          if "lat" not in geodict:
+              return image_failure(request, "Could not find requred key 'lat' in 'geolocation'")
+          latitude = (geodict["lat"])
+          if "lng" not in geodict:
+              return image_failure(request, "Could not find required key 'lng' in 'geolocation'")
+          longitude = (geodict["lng"])
+    
+          #Name and Tags are optional parameters
+          if "name" not in jsonDict:
+              image_name = "untitled image from device"
+          else:
+              image_name = jsonDict["name"]
+        
+
+          if "tags" in jsonDict:            
+              tags = tag_utils.TagsFromText(",".join(jsonDict["tags"]))
+
+          if "photo_data" not in jsonDict:
+              return image_failure(request, "Could not find required key 'photo_data' in input")        
+        
+          if "description" in jsonDict:
+              try:
+                  image_description = jsonDict["description"]
+              except Exception as e:
+                  log_error(e)
+                  return rest_failure(request)
+
+          encoded_img_data = jsonDict["photo_data"]
+          for encoded_img in encoded_img_data:
+ 
+              img = Image()
+              img.submission_date = datetime.fromtimestamp(float(encoded_img["timestamp"]))
+
+              if "geolocation" in encoded_img:
+                  geodict = encoded_img["geolocation"]
+              img.latitude = geodict['lat']
+              img.longitude = geodict['lng']
+              img.image_name = image_name
+              #img.submitter = User.objects.filter(username = 'Device')[0]
+              img.submitter = User.objects.get(username__exact='mobile')
+              #if "description" not in encoded_img:
+              #    if image_description:
+              #        img.image_description = image_description
+              if "description" in encoded_img:
+                  try:
+                      img.image_description = encoded_img["description"]
+                  except Exception as e:
+                      log_error(e)
+                      return rest_failure(request)
+              #Note that in order to add the correct foreign keys we must first save the image
+              #to allocate it an id value. This means future failures need to roll back the save
+              #by deleting the 'corrupt' entry
+              img.save()
+              if "tags" in jsonDict: 
+                  for tag in tags:
+                      img.tags.add(tag)
+
+              try:
+                  img_data = base64.b64decode(encoded_img['data'])
+              except Exception as e:
+                  log_error(e)
+                  image.delete()
+                  return image_failure(request, "Could not decode base64 image data")
+              img.image_path = str(random.getrandbits(128))
+              if "extension" in encoded_img:
+                  img.extension = encoded_img["extension"]
+              else:
+                  img.extension = 'jpg'
+              #TODO - reject malformed or corrupt images somehow
+              #       ideally there's a way to verify file types
+              #       so we can also stop image based XSS or 
+              #       something. need to research
+              try:
+                 with open(os.path.join(settings.STATIC_ROOT, "uploaded-images/"+img.image_path+"."+img.extension), "wb+") as img_file:            
+                      img_file.write(img_data)
+                      img.save()
+              except Exception as e:
+                 log_error(e)
+                 img.delete()
+                 return rest_failure(request)
+
+              return rest_success(request, img.id)
+        except Exception as e:
+            log_error(e)
+            return rest_failure(request)
+
+#TODO - this might not actually be necessary whatsoever?
+
+def export(request):
+    """
+    Returns image data in the database as a JSON string
+    """
+    if request.method == 'GET':
+        images = Image.objects.all()[:1] #TODO a better system
+        respDict = {}
+        respDict["status"] = "OK"
+        for image in images:
+            imageDict = image_to_json(image)
+            respDict["image_"+str(image.id)] = imageDict
+        responseData = json.dumps(respDict)
+        response = HttpResponse(responseData, "application/json", 200)
+        return response
+    else:
+        respDict = {}
+        respDict["status"] = "ERROR"
+        respDict["error_message"] = "Incorrect request method (expected GET)"
+        respDict["url"] = request.build_absolute_uri()
+
+        responseData = json.dumps(respDict)
+        response = HttpResponse(responseData, "application/json", 405)        
+
+def image_to_json(image):
+    '''
+    Helper function used by export to transform images to json
+    '''
+    imageDict = {}
+    imageDict["id"] = image.id
+    imageDict["lat"] = str(image.latitude)
+    imageDict["lng"] = str(image.longitude)
+    imageDict["name"] = image.image_name
+    try:
+        with open(os.path.join(settings.STATIC_ROOT, "uploaded-images/"+str(image.image_path)+"."+str(image.extension)), "rb") as imageObj:
+            imageDict["image_data"] = base64.b64encode(imageObj.read())
+    except IOError:
+        return {"error":"image not found"}
+    return imageDict
+
+   
+def rest_success(request, img_id):
+    '''
+    Successful rest calls always return the same thing at the moment
+    ''' 
+    respDict = {}
+    respDict["status"] = "OK"
+    respDict["error_message"] = ""
+    #respDict["url"] = "/image/%s" % img_id
+    respDict["url"] = reverse('wainz.views.image', args=[img_id])
+    responseData = json.dumps(respDict)
+    response = HttpResponse(responseData, "application/json", 200)
+    return response
+
+def image_failure(request, message):
+    '''
+    A failure in the api should return 200 with the error message, rather than
+    returning the http error code, which isn't really restful, but it was breaking
+    integration. I figure we prefer an API that actually integrates to one that 
+    uncomprimisingly follows rest techniques
+    '''
+    respDict = {}
+    respDict["status"] = "ERROR"
+    respDict["error_message"] = message
+    respDict["url"] = request.build_absolute_uri()
+    responseData = json.dumps(respDict)
+    response = HttpResponse(responseData, "application/json", 200)
+    return response
+
+def rest_failure(request):
+    '''
+    This is an actual, legitimate exception. As in our code threw an unhandled exception.
+    '''
+    respDict = {}
+    respDict["status"] = "ERROR"
+    respDict["error_message"] = "An unexpected error occurred on the server end. Please contact the server administrator"
+    respDict["url"] = request.build_absolute_uri()
+    responseData = json.dumps(respDict)
+    response = HttpResponse(responseData, "application/json", 200)
+    return response
+
+def log_error(msg):
+    with open(os.path.join(os.path.dirname(__file__), "log.txt"), "a+") as err_log:
+        err_log.write("\r\n[%s]%s"%(datetime.now().isoformat(), msg))

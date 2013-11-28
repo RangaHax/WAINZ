@@ -1,0 +1,15 @@
+{% extends "pages/page.html" %}
+
+{% block main %}
+<div id="ranga-padding">
+<h2 class='featurette-heading'> Login</h2>
+<p class='centered'> You must login to use some features of this website </p>
+
+<form class='centered' method="post" action="{% url "django.contrib.auth.views.login" %}">
+{% csrf_token %}
+{{ form.as_p }}
+<input class='btn btn-large btn-primary' type="submit" value="login" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+<div class="ranga-top"></div>
+{% endblock %} 

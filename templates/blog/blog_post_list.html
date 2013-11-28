@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block meta_title %}{% if page %}{{ page.richtextpage.meta_title }}{% else %}Media{% endif %}{% endblock %}
+{% block main %}
+<!-- -------------------All contents starts below here------------------------------------ -->
+
+    <div class="container" style="padding-top: 5%">
+
+      <div class="row">
+
+        <div class="col-lg-12">
+          <h1 class="page-header">{{ page.richtextpage.meta_title }}<small>{{ page.richtextpage.content }}</small></h1>
+        </div>
+
+      </div>
+
+
+	<!-- -------------------All contents starts below here------------------------------------ -->
+
+
+<div class="container" id="contents">
+	{% for blog_post in blog_posts.object_list %}
+<div class="row">
+
+	<div class="col-md-12">
+			<h4>{{ blog_post.title }}</h4>
+			<p>{{ blog_post.description_from_content|safe }}</p>
+			
+		</div>
+
+</div><hr>
+{% endfor %}
+
+      	<!-- -------------------The Articles are placed here------------------------------------ -->
+
+</div>
+
+      
+<!-- --------------------------Number of pages---------------------------- -->
+
+
+	<div class="container" id="page">
+
+      <div class="row text-center">
+
+<div class="col-lg-12">
+  <ul class="pagination">
+    <li id="previous"><a href="#">&laquo; Previous</a></li>
+    <li id="next"><a href="#">Next &raquo;</a></li>
+  </ul>        
+</div>
+
+</div>
+
+</div>
+{% endblock %}

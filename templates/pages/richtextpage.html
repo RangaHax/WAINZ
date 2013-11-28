@@ -1,0 +1,11 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags %}
+{% block main %}{{ block.super }}
+<div class="ranga-top"></div>
+<div id="ranga-padding">
+{% editable page.richtextpage.content %}
+{{ page.richtextpage.content|richtext_filters|safe }}
+{% endeditable %}
+
+{% endblock %}

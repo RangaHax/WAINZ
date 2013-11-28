@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load mezzanine_tags %}
+{% block meta_title %}Maps{% endblock %}
+{% if user.is_staff %}
+    <script src="{{ STATIC_URL }}mezzanine/js/jquery-1.7.1.min.js">
+        jQuery.noConflict();
+    </script>
+{% endif %}
+{% block javascriptincludes %}
+  
+  <script type="text/javascript" src="{{ STATIC_URL }}js/map-coords.min.js"></script>
+  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&libraries=geometry&sensor=false"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}js/map-final-test.js"></script>
+   
+   
+    
+   <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/maplabel/src/maplabel-compiled.js"></script>
+<script>
+	    $("#map_controls").on('change','#region', function(event){
+	        regionSelector();
+	    });
+
+	    $("#map_controls").on('click','#rivers', function(event){
+	        displayRivers();
+	    });
+	</script>
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+<script src="../../assets/js/html5shiv.js"></script>
+<script src="../../assets/js/respond.min.js"></script>
+<![endif]-->
+
+<script>
+      var height = $(window).height()-50;
+    $("#map_canvas").height(height);
+
+    $(window).resize(function() {
+    var height = $(window).height()-50;
+    $("#map_canvas").height(height);
+    });
+
+    </script>
+
+
+{% endblock %}
+
+
+{% block main %}
+    <style>
+    #wrapper { position: relative; }
+    #map_controls { position: absolute; width: 100px; left: 5px; top: 5px;}
+    </style>
+    <style>
+      #map_canvas{
+        display: block;
+        height: 1500px;
+      }
+      #map_canvas img{
+        max-width: none;
+      }
+      body {
+        padding-top: 50px;
+        background-color:#ffffff;
+      	padding-bottom: 0px;
+	}
+      .starter-template {
+        padding: 40px 15px;
+        text-align: center;
+      }
+      img {
+        /* Responsive images (ensure images don't scale beyond their parents) */
+        max-width: 160px;
+        /* Part 1: Set a maxium relative to the parent */
+        width: auto\9;
+        /* IE7-8 need help adjusting responsive images */
+        height: auto;
+        /* Part 2: Scale the height according to the width, otherwise you get stretching */
+        vertical-align: middle;
+
+        border: 0;
+      }
+      .centered {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+
+    </style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+      <div id="wrapper">
+    <div id="map_canvas"></div>
+		<div id="map_controls">
+			<form>
+				<select name="region" id="region" size="1">
+					<option value="None">Hide All</option>
+					<option value="Northland">Northland</option>
+					<option value="Auckland">Auckland</option>
+					<option value="Waikato">Waikato</option>
+					<option value="West Coast">West Coast</option>
+					<option value="Bay of Plenty">Bay of Plenty</option>
+					<option value="Canterbury">Canterbury</option>
+					<option value="Gisborne">Gisborne</option>
+					<option value="Otago">Otago</option>
+					<option value="Southland">Southland</option>
+					<option value="Hawke's Bay">Hawke's Bay</option>
+					<option value="Tasman">Tasman</option>
+					<option value="Taranaki">Taranaki</option>
+					<option value="Manawatu-Wanganui">Manawatu-Wanganui</option>
+					<option value="Nelson">Nelson</option>
+					<option value="Wellington">Wellington</option>
+					<option value="Marlborough">Marlborough</option>
+					<option value="All">Show All</option>
+				</select>
+				<input type="button" id="rivers" name="rivers" value="Toggle Waterways"/>
+			</form>
+		</div>
+	</div>
+
+
+{% endblock %}
+
+
+{% editable_loader %}
+
+
+{% block footer %}{% endblock %}

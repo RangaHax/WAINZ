@@ -1,0 +1,44 @@
+{% load i18n future pages_tags %}
+{% spaceless %}
+
+				
+<ul class="nav navbar-nav navbar-right">
+
+	{% for navpage in page_branch %}
+		<!-- this is where the links should be looped -->
+	  {% if navpage.has_children %}
+	      <li class="dropdown"><a href="#" class="dropdown-toggle"
+		      data-toggle="dropdown" style="color: white;"> {{ navpage.title }} <b
+			      class="caret" style="border-top-color: #ffffff;border-bottom-color: #ffffff;"></b></a>
+		      <ul class="dropdown-menu">
+			      {% for childpage in navpage.children.all %}
+				      <li><a href="{{ childpage.get_absolute_url }}">{{ childpage.title }}</a></li>
+			      {% endfor %}
+			      
+		      </ul>
+	      </li>
+	  {% elif navpage.in_menu %}
+	      <li><a href="{{ navpage.get_absolute_url }}" style="color:white;" id="mezNavFix">{{ navpage.title }}</a></li>
+	  {% endif %}
+
+		
+		
+    {% endfor %}
+    {% if user.is_authenticated %}
+    <li class="dropdown"><a href="#" class="dropdown-toggle"
+		      data-toggle="dropdown" style="color: white;">User<b
+			      class="caret" style="border-top-color: #ffffff;border-bottom-color: #ffffff;"></b></a>
+		      <ul class="dropdown-menu">
+			<li><a href="/accounts/profile">My Account</a></li>
+			{% if request.user.is_staff %}
+			<li><a href="/admin">Admin</a></li>
+			<li><a href="/approve">Image Approval</a></li>
+			{% endif %}
+			<li><a href="/logout">Logout</a></li>
+		      </ul>
+    </li>
+    {% else %}
+    <li><a href="/login/?next=/" style="color:white;" id="mezNavFix">Login</a></li>
+    {% endif %}
+</ul>
+{% endspaceless %}
