@@ -6,7 +6,7 @@ $(document).ready(function(){
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions)
-        
+        console.log("failo")
         attachMarker(map, university);
         $("#lat").val(university.lat());
         $("#lng").val(university.lng());
