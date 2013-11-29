@@ -108,7 +108,7 @@ function createInfoWindow(fileName, title, description, date, tags, user, id) {
     '</div>' +
     '<h2 id="firstHeading" class="firstHeading"> '+ title + '</h2>' +
     '<div id = "image">' +
-    '<a href="'+window.location.href +'../static/uploaded-images/'+ fileName + '" target="_blank" ><img src="' +window.location.href +'../static/uploaded-images/'+ fileName +'" /></img></a>' +
+    '<a href="'+ fileName + '" target="_blank" ><img src="' +fileName +'" /></img></a>' +
     '</div>' +
     '<div id="bodyContent">' +
     '<p><b>Description:</b> '+ description +'</p>' +
@@ -498,20 +498,20 @@ function initialize() {
 
     // Import data from API stored as JSON using jQuery (AJAX) 
     // TO BE COMPLETED
-    var done = false;
-    $.getJSON('/api/export', function(data) {
+    // var done = false;
+    // $.getJSON('/api/export', function(data) {
     	
-        $.each( data, function( key, val ) {
-        	if(key != "status"){
-            points.push(val);
-            // console.log(key+" "+ val.extension +" "+ val.image_name +" "+ val.path +" "+ val.lat +" "+ val.lng +" "+ val.id); // Something like this
-            // console.log(points.length)
-        }
+    //     $.each( data, function( key, val ) {
+    //     	if(key != "status"){
+    //         points.push(val);
+    //         // console.log(key+" "+ val.extension +" "+ val.image_name +" "+ val.path +" "+ val.lat +" "+ val.lng +" "+ val.id); // Something like this
+    //         // console.log(points.length)
+    //     }
             
-        });
+    //     });
         finish();
        
-    });
+    // });
 
     function finish(){
 
@@ -519,7 +519,7 @@ function initialize() {
         "This is a river that is good", "10/10/10", "River, No Cows, Clean", 0);
 
     for ( var i = 0; i < points.length; i++){
-    	// console6.log(points[i].extension +" "+ points[i].image_name +" "+ points[i].path +" "+ points[i].lat +" "+ points[i].lng +" "+ points[i].id);
+    	       console.log(points[i].image_name +"\t"+ points[i].path +"\t"+ points[i].extension +"\t"+  points[i].lat +"\t"+ points[i].lng +"\t"+points[i].date +"\t"+ points[i].id+"\t"+ points[i].tags+"\t"+ points[i].user);
         createMarkers(
             new google.maps.LatLng(points[i].lat, points[i].lng),
             null,
