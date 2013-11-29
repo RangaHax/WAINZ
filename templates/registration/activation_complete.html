@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
-
-{% block content %}
+{% block meta_title %}Registration{% endblock %}
+{% block main %}
+<div id="ranga-padding">
+<h2 class='featurette-heading'>Registration</h2>
 <p>{% trans "Your account is now activated." %}</p>
+<p>You can now <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></p>
+<div class="ranga-top"></div>
 {% endblock %}

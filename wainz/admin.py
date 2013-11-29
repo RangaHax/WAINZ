@@ -14,11 +14,6 @@ def sticky(modeladmin, request, queryset):
 def unsticky(modeladmin, request, queryset):
     queryset.update(is_sticky=False)
 
-class VoteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'object', 'vote')
-    list_filter = ('content_type', 'vote')
-    radio_fields = { 'vote': admin.VERTICAL }
-
 class ImageAdmin(admin.ModelAdmin):
     def tags_(self, obj):
         return ', '.join(["`%s'" % v[1] for v in obj.tags.get_query_set().values_list()])
@@ -40,13 +35,10 @@ class ImageAdmin(admin.ModelAdmin):
 
     # TODO Working joined queryset
 
-class ImageCommentAdmin(admin.ModelAdmin):
-    list_display = ('comment_text', 'image', 'submitter', 'submission_date')
 class HomePageSettings(admin.ModelAdmin):
     field_display = ('banner_text')
     
-admin.site.register(Vote, VoteAdmin)
+
 admin.site.register(Image, ImageAdmin)
-admin.site.register(ImageComment, ImageCommentAdmin)
 admin.site.register(HomePage, HomePageSettings)
 admin.site.register(Tag)

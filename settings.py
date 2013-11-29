@@ -218,6 +218,15 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
+#reg info
+ACCOUNT_ACTIVATION_DAYS = 14
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'wainztest@gmail.com'
+EMAIL_HOST_PASSWORD = 'homepages'
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'WAINZ <wainztest@gmail.com>'
+
 
 ################
 # APPLICATIONS #
