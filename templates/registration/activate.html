@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
-
-{% block content %}
+{% block meta_title %}Activate{% endblock %}
+{% block main %}
+<div id="ranga-padding">
+<h2 class='featurette-heading'>Registration</h2>
 
 {% if account %}
 
@@ -14,5 +16,5 @@
 <p>{% trans "Account activation failed" %}</p>
 
 {% endif %}
-
+<div class="ranga-top"></div>
 {% endblock %}

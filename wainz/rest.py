@@ -159,7 +159,8 @@ def export(request):
     Returns image data in the database as a JSON string
     """
     if request.method == 'GET':
-        images = wainz.models.Image.objects.all()
+        #images = wainz.models.Image.objects.all()
+        images = wainz.models.Image.objects.order_by('-submission_date').filter(is_approved=True)
         respDict = {}
         respDict["status"] = "OK"
         for image in images:
@@ -184,23 +185,23 @@ def image_to_json(image):
     Helper function used by export to transform images to json
     '''
     print 'checking image'+str(image.id)+': '+str(image.is_approved)
-    if image.is_approved == True:
+    #if image.is_approved == True:
 
-      imageDict = {}
-      tags = ""
-      for Tag in image.tags.all():
-        tags += Tag.tag_text+" "
-      imageDict["id"] = image.id
-      imageDict["lat"] = str(image.latitude)
-      imageDict["lng"] = str(image.longitude)
-      imageDict["extension"] = str(image.extension)
-      imageDict["path"] = str(image.image_path)
-      imageDict["description"] = str(image.image_description)
-      imageDict["image_name"] = image.image_name
-      imageDict["date"] = str(image.submission_date.date())
-      imageDict["tags"] = tags
-      imageDict["user"] = str(image.submitter)
-      return imageDict
+    imageDict = {}
+    tags = ""
+    for Tag in image.tags.all():
+      tags += Tag.tag_text+" "
+    imageDict["id"] = image.id
+    imageDict["lat"] = str(image.latitude)
+    imageDict["lng"] = str(image.longitude)
+    imageDict["extension"] = str(image.extension)
+    imageDict["path"] = str(image.image_path)
+    imageDict["description"] = str(image.image_description)
+    imageDict["image_name"] = image.image_name
+    imageDict["date"] = str(image.submission_date.date())
+    imageDict["tags"] = tags
+    imageDict["user"] = str(image.submitter)
+    return imageDict
 
 
 def rest_success(request, img_id):

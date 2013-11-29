@@ -30,37 +30,8 @@ import base64
 import random
 
 
-def add_comment(request):
-    """
-    Adds a comment to an image. This is only accessible from an individual image
-    page, via and ajax call. We don't really mind too much about error handling
-    at this point because any ajax call that fails will just show an error message
-    when it picks up the 500, rather than explode anything.
-    """
-    if request.method != 'POST':
-        return HttpResponseRedirect(reverse('wainz.views.composite'))
-    else:
-        img_id = request.POST['id']
-        try:
-            img = Image.objects.get(pk=img_id)
-        except:
-            return HttpResponseRedirect(reverse('wainz.views.composite'))
-        comment_text = request.POST['comment']
-        #TODO sanitize input
-        comment = ImageComment()
-        comment.submission_date = timezone.now()
-        comment.comment_text= comment_text
-        comment.image_id = img_id
-        comment.submitter_id = int(request.POST['uid'])
-        comment.save()
-        return rest.rest_success(request, img_id)
-
-
-
 def imggallery(request):
     images = Image.objects.order_by('-submission_date').filter(is_approved=True)[0:30]
-    
-    
     return render_to_response('wainz/gallery.html', {'images':images}, context_instance = RequestContext(request))
 
 def approve(request, img_id):
@@ -130,43 +101,6 @@ def add_tag(request):
         resp.content = json.dumps(respJson)
         return resp
 
-def contact(request):
-    """
-    Returns the contact information page.
-    """
-    if request.method == 'POST': # If the form has been submitted...
-        form = ContactForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            fullname = form.cleaned_data['fullname']
-            email = form.cleaned_data['email']
-            topic = form.cleaned_data['topic']
-            message = form.cleaned_data['message']
-            reply_needed = form.cleaned_data['reply']
-            tmp_message = "Message From: " + fullname + "\n\n"
-            tmp_message += "Email Address: " + email + "\n\n"
-            if reply_needed:
-                tmp_message += "Reply Needed: Yes\n\n--------------------\n\n"
-            else:
-                tmp_message += "Reply Needed: No\n\n--------------------\n\n"
-
-            subject = 'Wainz Webform: '+topic
-            message = tmp_message + message
-            from_email = 'noreply@wainz.org.nz'
-            recipient_list = ['wai.newzealand@gmail.com']
-
-            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
-            return HttpResponseRedirect('thanks/') # Redirect after POST
-    else:
-        form = ContactForm() # An unbound form
-
-    return render(request, 'wainz/contact.html', { 'form': form, })
-
-def our_friends(request):
-    """
-    Returns the our friends page.
-    """   
-    return render_to_response('wainz/our_friends.html', {}, context_instance = RequestContext(request))
 
 def image(request, img_id):
     """
@@ -239,21 +173,6 @@ def composite(request):
     points = [search_utils.to_map_point(image) for image in latlngs]
     context["latLngs"] = points
     return render_to_response('wainz/composite.html',  context, context_instance = RequestContext(request))
-
-def register_user(request):
-    if request.method == "POST":
-        try:
-          uname = request.POST["username"]
-          passwd = request.POST["password1"]
-          email = request.POST["email"]
-          new_user = User.objects.create_user(uname, email, passwd)
-          new_user.is_active = new
-          user.save()
-        except Exception as e:
-          return HttpResponseRedirect(reverse('registration_register'))
-        return HttpResponseRedirect(reverse('registration_complete'))
-    else:
-        return HttpResponseRedirect(reverse('wainz.views.composite'))
 
 
 def search(request):
@@ -406,6 +325,7 @@ def submit(request):
             template = loader.get_template("wainz/submission_details.html")
 
             return HttpResponse(template.render(ctx))
+         
     else:
         form = SubmitForm()
 
