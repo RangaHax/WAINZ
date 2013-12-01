@@ -31,7 +31,7 @@ import random
 
 
 def imggallery(request):
-    images = Image.objects.order_by('-submission_date').filter(is_approved=True)[0:30]
+    images = Image.objects.order_by('-submission_date').filter(is_approved=True)[0:10000]
     return render_to_response('wainz/gallery.html', {'images':images}, context_instance = RequestContext(request))
 
 def approve(request, img_id):
@@ -65,8 +65,8 @@ def approve_images(request):
     """
     Open the tab where you can approve images
     """
-    if not request.user.is_staff:
-        return HttpResponseRedirect(reverse('wainz.views.composite'))
+    if not request.user.is_staff and not request.user.has_perm("approve-images"):
+        return HttpResponseRedirect(reverse('home'))
     else:
         images = Image.objects.filter(is_approved=False).order_by('-submission_date')
         ctx = {"images":images}
@@ -108,52 +108,31 @@ def image(request, img_id):
     """
     image = Image.objects.get(pk=img_id)
     if request.user.is_staff or image.is_approved:
-        comments = ImageComment.objects.filter(image_id=img_id).order_by('-submission_date')
-        comments_and_votes = Vote.objects.get_weighted_scores_in_bulk(comments, request.user)
 
         ctx = {"img":image,
-               "comments_and_votes":comments_and_votes,
                "image_tags":image.tags.all(),
                "all_tags":Tag.objects.all(),
                "site":get_current_site(request)
               }
         return render_to_response('wainz/image.html', ctx , context_instance = RequestContext(request))
     else:
-        return HttpResponseRedirect(reverse('wainz.views.composite'))
+        return HttpResponseRedirect(reverse('home'))
 
 def ordered_images(start, max_count, current_user=None):
     images = Image.objects.order_by('-submission_date').filter(is_approved=True)
     votes_and_images = Vote.objects.get_weighted_scores_in_bulk(images, current_user)
     return votes_and_images[start:max_count]
 
-
-def image_display(start, end, user=None):
-    """
-    Displays a list of images that have been uploaded by a given user, or all users if the user
-    param is None. Also specified are the start and end splice points of the list of images returned,
-    allowing you to limit or offset the images returned.
-    """
-    if user != None:
-        images = Image.objects.filter(submitter_id = user.id).order_by('-submission_date')[start:end]
-    else:
-        images = Image.objects.order_by('-submission_date')[start:end]
-    rows = {}
-    #Initialise lists
-    for i in xrange(int(math.ceil(len(images)/3.0))): rows[i] = []
-    #applies the lambda function to put each element into it's correct row
-    map((lambda (idx, elem): rows[idx/3].append(elem)), enumerate(images))
-    return rows
-
-def images_for_user(request, uname):
+def images_for_user(request):
     """
     A helper/potentially entirely redundant function that returns all of a users images, accessed from
     the 'display your images' drop down option
     """
-    try:
-        user = User.objects.get(username=uname)
-    except Exception as user_does_not_exist:
-        return render_to_response('wainz/image_list.html', {"rows":[]} , context_instance = RequestContext(request))
-    return render_to_response('wainz/image_list.html', {"rows":image_display(0, 10000, user)} , context_instance = RequestContext(request))
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('home'))
+    else:
+      images = Image.objects.filter(submitter_id = request.user.id).order_by('-submission_date')[0:10000]
+      return render_to_response('wainz/profile.html', {'images':images} , context_instance = RequestContext(request))
 
 
 def image_list(request):

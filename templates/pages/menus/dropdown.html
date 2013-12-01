@@ -29,7 +29,7 @@
 		      data-toggle="dropdown" style="color: white;">{{ user.username }}<b
 			      class="caret" style="border-top-color: #ffffff;border-bottom-color: #ffffff;"></b></a>
 		      <ul class="dropdown-menu">
-			<li><a href="/accounts/profile">My Images</a></li>
+			<li><a href="/accounts/profile">My Profile</a></li>
 			<li><a href="{% url 'auth_password_change' %}">Change Password</a></li>
 			{% if request.user.is_staff %}
 			<li><a href="/admin">Admin</a></li>

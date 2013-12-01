@@ -44,7 +44,12 @@ class Image (models.Model):
 
     def __lt__(self, other):
         return submission_date.__lt__(other)
-
+    class Meta:
+        permissions = ( 
+            ( "approve-images", "Can approve images" ),
+        )
+        
+        
 @total_ordering
 class ImageComment (models.Model):
     image = models.ForeignKey(Image)

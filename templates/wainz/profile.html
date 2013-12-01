@@ -1,8 +1,41 @@
-<html>
-  <head>
-    <title></title>
-    <meta content="">
-    <style></style>
-  </head>
-  <body></body>
-</html>
+{% extends "base.html" %}
+
+{% load wainz_tags %}
+{% block meta_title %}My Profile{% endblock %}
+{% block main %}
+    <div class="container" style="padding-top: 5%">
+
+<div class='row-fluid'>
+  <div class='span12'>
+    <h2>Welcome {{user.username}}</h2>
+    <!-- an ugly separator because the name looks goofy hanging out by itself -->
+    <div style='background-color:#556; height:3px; margin-bottom:5px'></div>
+  </div>
+  <div class='span11 well' style='text-align:center'>
+    
+<div id='maps' style="height:450px; width:100%;"></div>
+  </div>
+  <div class='span12' id='img_details'>
+   Number of Images: {{images|length}} | <a href="{% url 'wainz.views.submit' %}">Upload Image</a> | <a href="{% url 'auth_password_change' %}">Change Password</a>
+  </div>
+<div class="ranga-top"></div>
+{% endblock %}
+
+{% block page_specific_javascript %}
+
+<script type='text/javacript' src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js'></script>
+<script type="text/javascript"
+      src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&amp;sensor=true"></script>
+<script type="text/javascript">
+var jsImages= new Array();
+{% for img in images %}
+var pt = new google.maps.LatLng({{img.latitude}}, {{img.longitude}})
+jsImages.push(pt)
+console.log(pt)
+{% endfor %}	 
+</script>
+
+
+
+<script type='text/javascript' src='{{ STATIC_URL }}js/profile.js'></script>
+{% endblock %}
