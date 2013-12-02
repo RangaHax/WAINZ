@@ -11,10 +11,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/map-coords.min.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&libraries=geometry&sensor=false"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/map-final-test.js"></script>
-
-
-
-<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/maplabel/src/maplabel-compiled.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/maplabel-compiled.js"></script>
 <script>
  $("#map_controls").on('change','#region', function(event){
    regionSelector();

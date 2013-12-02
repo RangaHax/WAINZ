@@ -46,7 +46,7 @@
 
     $.fn.loginPrompt.defaults = {
         top  : "60",
-        left : $(".login-button").offset().left*0.79
+        // left : $(".login-button").offset().left*0.79
     }
 
 }(window.jQuery);
