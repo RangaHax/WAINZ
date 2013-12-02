@@ -5,27 +5,13 @@
 {% block main %}
     <div class="container" style="padding-top: 5%">
 <div id="fb-root"></div>
-	<script src="//connect.facebook.net/en_US/all.js#appId=347343208688512&amp;xfbml=1"></script>
-	<script>
-            function postonwall()
-            {
-                FB.api('/WaiNewZealand/feed', 'post',
-                {
-                    message: 'New Picture Online On The Wai NZ Site',
-                    link:'http://{{ site.domain }}{% url "wainz.views.image" img.id %}',
-                    name:'{{img.image_name}}',
-                    picture:'http:{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}',
-                    description:'Go to the link to find out ways of helping improve New Zealand&#39;s waterways'
-                }, function(response) {
-                    if (!response || response.error) {
-                        alert('Oops! User Denied Access');
-                    } else {
-                        alert('Success: Content Published');
-                    }
-                });
-            }
-    </script>
-
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <div class='row-fluid'>
   <div class='span12'>
     <h2>{{img.image_name}}</h2>
@@ -42,6 +28,7 @@
    <span class='detail'>Uploaded: {{img.submission_date}}</span>
    <span class='detail'>
      <a href='#' id='loc'> Location</a>: ({{img.latitude}}, {{img.longitude}})
+     <a href="#" id='share'>Share</a>
    </span>
 
    <!--<span class='detail'>
@@ -71,6 +58,8 @@
                {{img.image_description}}
            {% endif %}
        </span>
+	<h3>Comments</h3>
+<div class="fb-comments" data-href="http://wainz.org.nz/image/{{img.id}}"  data-numposts="5" data-colorscheme="light"></div>
     </div>
   </div>
 
@@ -120,6 +109,7 @@
                 //TODO, display an error?
              });
          });
+	
         var lat = {{img.latitude}}, lng = {{img.longitude}}
         var img_id = {{img.id}}
 
