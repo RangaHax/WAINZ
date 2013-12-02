@@ -37,6 +37,7 @@ urlpatterns = patterns("",
     url(r'^image/(?P<img_id>\d+)/$', 'wainz.views.image'),
     url(r'^add_tag/$', 'wainz.views.add_tag'),
     url(r'^map/$','wainz.views.maps'),
+    url(r'^accounts/profile/$','wainz.views.images_for_user'),
     
     #JSON Export
     url(r'^api/export/$', 'wainz.rest.export'),
