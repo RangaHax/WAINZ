@@ -46,7 +46,7 @@ $(document).ready(function(){
     }
 
     $( "#tag_container" ).toggle( {"effect":"slide"} );
-  // $("#tag_text").typeahead({source:typeAheadSource});
+  $("#tag_text").typeahead({source:typeAheadSource});
   $("#add_tag_submit").click(function(e){
     var tag_text = $("#tag_text").val();
     if(tag_text == ''){

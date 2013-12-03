@@ -84,11 +84,12 @@
  </span> 
  {% if request.user.is_staff %}<a href='#' id='add_tag'>+</a>
    <div id="tag_container">
-    <div >Attach an existing tag, or add your own: 
+    <div >Add existing or new tags seperated by commas: 
       <input type='text' id='tag_text' style='width:25%' autocomplete='off'></input>
       {% csrf_token %}
       <button class='btn btn-success' id='add_tag_submit' method=''>Submit</button>
     </div>
+
   </div>
  </div>
 {% endif %}
@@ -119,28 +120,16 @@
 <script type='text/javascript'>
   {% autoescape off %}
   
-  {% if not user.is_authenticated %}
+  {% if user.is_authenticated %}
+  var current_uid = {{ user.id }}
+
+  var user_name = "{{ user }}"
+  var typeAheadSource = [
+  {% for tag in all_tags %}
+  "{{tag.tag_text}}", 
+  {% endfor %}]
+  
   $(".vote").loginPrompt();
-  {% else %}
-  $("button.vote").click(function(e) {
-    e.preventDefault();
-    var actionURL = $(this).parent().attr("action");
-    var data = {                
-      "csrfmiddlewaretoken":$("#csrf").find('input').val(),
-    };
-
-    $(that).parent().attr("action", actionURL);
-    var that = this;
-    
-    var actionList = actionURL.split('/');
-
-    $.post(actionURL, data, function(data){
-     window.location.reload();
-   })
-    .error(function(data){
-                //TODO, display an error?
-              });
-  });
   {% endif %}
   $(".login-button").click(function() { $("div.login.alert").remove(); });
   $("button.vote").click(function(e) {
@@ -169,6 +158,7 @@
               "{{tag.tag_text}}", 
           {% endfor %}]
 {% endautoescape %}
+
 
 </script>
 
