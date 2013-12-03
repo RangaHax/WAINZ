@@ -96,10 +96,10 @@ def add_tag(request):
         tag_val = request.POST['tag']
         print tag_val
         try:
-            tag = tag_utils.TagsFromText(tag_val)[0]
-            added = True
-            img.tags.add(tag)
-            img.save()
+        	for tag in tag_utils.TagsFromText(tag_val):
+        		img.tags.add(tag)
+        	img.save()
+        	added = True
         except:
             added = False
 
