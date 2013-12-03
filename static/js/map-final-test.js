@@ -98,6 +98,7 @@ function displayRivers() {
 
 
 function createInfoWindow(fileName, title, description, date, tags, user, id) {
+
     var contentString = '<style> ' +
     '#content{word-wrap: break-word; max-width:400px;}' +
     '#image {height:300px; width:400px; }' +
@@ -108,7 +109,7 @@ function createInfoWindow(fileName, title, description, date, tags, user, id) {
     '</div>' +
     '<h2 id="firstHeading" class="firstHeading"> '+ title + '</h2>' +
     '<div id = "image">' +
-    '<a href="'+window.location.href +'../static/uploaded-images/'+ fileName + '" target="_blank" ><img src="' +window.location.href +'../static/uploaded-images/'+ fileName +'" /></img></a>' +
+    '<a href="'+ fileName + '" target="_blank" ><img src="' +fileName +'" /></img></a>' +
     '</div>' +
     '<div id="bodyContent">' +
     '<p><b>Description:</b> '+ description +'</p>' +
@@ -465,53 +466,22 @@ function initialize() {
         AddEventHandlers(regions[i]);
 
 
-    //Hard coded temporary points for proof of concept
-    
-    // var points = [{'extension': 'jpg', 'image_name': 'Cows and a pig in the Kaeo River', 'lat': '-35.0898333333', 'path': '//www.wainz.org.nz/static/uploaded-images/243695398329515817226931691155125491443', 'lng': '173.7676666667', 'id': 74}, 
-    // {'extension': 'jpg', 'image_name': 'North Canterbury beef stock in stream', 'lat': '-42.6307673469', 'path': '//www.wainz.org.nz/static/uploaded-images/89914717573047748667166252363738837018', 'lng': '173.1396888950', 'id': 31}, 
-    // {'extension': 'jpg', 'image_name': 'Ihumatao - Oruarangi creek', 'lat': '-36.9798380399', 'path': '//www.wainz.org.nz/static/uploaded-images/40077846748125228723856284165115698322', 'lng': '174.7628266609', 'id': 75}, 
-    // {'extension': 'jpg', 'image_name': 'Stock in river', 'lat': '-36.6313454500', 'path': '//www.wainz.org.nz/static/uploaded-images/267333552515848401917699247648915644642', 'lng': '175.4745340347', 'id': 65}, 
-    // {'extension': 'jpg', 'image_name': 'Cows in river', 'lat': '-41.2834905869', 'path': '//www.wainz.org.nz/static/uploaded-images/4234521036228318747925117750426449282', 'lng': '175.6608375907', 'id': 66}, 
-    // {'extension': 'jpg', 'image_name': 'Just north of Carterton', 'lat': '-41.0221930018', 'path': '//www.wainz.org.nz/static/uploaded-images/85374843667129068625713784148686059742', 'lng': '175.5607570540', 'id': 76}, 
-    // {'extension': 'jpg', 'image_name': 'Mangaokewa, Te Kuiti', 'lat': '-38.3341631737', 'path': '//www.wainz.org.nz/static/uploaded-images/198323447572416469987830335439486251667', 'lng': '175.1677943993', 'id': 69}, 
-    // {'extension': 'JPG', 'image_name': 'Manawatu River', 'lat': '-41.2900997149', 'path': '//www.wainz.org.nz/static/uploaded-images/245743661757911788429686004627085415186', 'lng': '174.7681526604', 'id': 77}, 
-    // {'extension': 'jpg', 'image_name': 'Cherry island taupo', 'lat': '-38.6773182435', 'path': '//www.wainz.org.nz/static/uploaded-images/279789384298890445560306479313046407886', 'lng': '176.0830097757', 'id': 71}, 
-    // {'extension': 'jpg', 'image_name': 'Otahu river whangamata', 'lat': '-37.2353333333', 'path': '//www.wainz.org.nz/static/uploaded-images/309131387348949667208182903313572842483', 'lng': '175.8441666667', 'id': 72}, 
-    // {'extension': 'jpg', 'image_name': 'Beef cows in the Kaeo river Northland', 'lat': '-35.0953389418', 'path': '//www.wainz.org.nz/static/uploaded-images/241367489107703108199158756949244494487', 'lng': '173.7731507560', 'id': 73}, 
-    // {'extension': 'jpg', 'image_name': 'feedlot', 'lat': '-39.9602803543', 'path': '//www.wainz.org.nz/static/uploaded-images/312318377253163054147030580165596946856', 'lng': '176.6546630859', 'id': 104}, 
-    // {'extension': 'jpg', 'image_name': 'Kakapotahi river oil spill', 'lat': '-43.0071286908', 'path': '//www.wainz.org.nz/static/uploaded-images/86459809820991683833063977168781532255', 'lng': '170.7435547964', 'id': 101}, 
-    // {'extension': 'JPG', 'image_name': 'Kawhatau River', 'lat': '-41.2900997149', 'path': '//www.wainz.org.nz/static/uploaded-images/309229793600700305913124669277978193640', 'lng': '174.7681526604', 'id': 100}, 
-    // {'extension': 'jpg', 'image_name': 'Clean river above farms runoff', 'lat': '-37.2660000000', 'path': '//www.wainz.org.nz/static/uploaded-images/87522579744651000013162890152487273256', 'lng': '175.8345000000', 'id': 85}, 
-    // {'extension': 'JPG', 'image_name': 'SH53', 'lat': '-41.2900997149', 'path': '//www.wainz.org.nz/static/uploaded-images/49829753665157234762976905096478417552', 'lng': '174.7681526604', 'id': 87}, 
-    // {'extension': 'JPG', 'image_name': 'Tuakau, North Waikato', 'lat': '-41.2900997149', 'path': '//www.wainz.org.nz/static/uploaded-images/163257200272820323333514426063617433536', 'lng': '174.7681526604', 'id': 117}, 
-    // {'extension': 'jpg', 'image_name': 'feedlot on river', 'lat': '-39.9434364620', 'path': '//www.wainz.org.nz/static/uploaded-images/12134325451602530810715733871881281727', 'lng': '176.6546630859', 'id': 105}, 
-    // {'extension': 'jpg', 'image_name': 'OLD Waipawa river bed', 'lat': '-39.9771200984', 'path': '//www.wainz.org.nz/static/uploaded-images/18397363273428760096505715131402403585', 'lng': '176.5118408203', 'id': 106}, 
-    // {'extension': 'jpg', 'image_name': '', 'lat': '-41.3228252727', 'path': '//www.wainz.org.nz/static/uploaded-images/242468383331370402552151624510231644065', 'lng': '173.1582760348', 'id': 108}, 
-    // {'extension': 'jpg', 'image_name': 'Whau Estuary Pollution', 'lat': '-36.8631414330', 'path': '//www.wainz.org.nz/static/uploaded-images/74298425246354173290188832744210528168', 'lng': '174.6560096741', 'id': 120}, 
-    // {'extension': 'jpg', 'image_name': 'Aratitia rapids', 'lat': '-38.6159379939', 'path': '//www.wainz.org.nz/static/uploaded-images/79616475897059200773379118519225608853', 'lng': '176.1414284965', 'id': 119}, 
-    // {'extension': 'jpg', 'image_name': 'Wainui Stream, Paekakariki', 'lat': '-40.9766171339', 'path': '//www.wainz.org.nz/static/uploaded-images/204609434489357963808645843905837819961', 'lng': '174.9658466019', 'id': 121}, 
-    // {'extension': 'jpg', 'image_name': 'Foam Pollution', 'lat': '-36.9014157136', 'path': '//www.wainz.org.nz/static/uploaded-images/285707902342278628524736369292301415102', 'lng': '174.6849185228', 'id': 122}, 
-    // {'extension': 'jpg', 'image_name': 'Avon River Christchurch ', 'lat': '-43.5088333333', 'path': '//www.wainz.org.nz/static/uploaded-images/216635625063130034243286474750037167002', 'lng': '172.7206666667', 'id': 141}, 
-    // {'extension': 'jpg', 'image_name': 'Urban Stormwater pollution', 'lat': '-36.7691170095', 'path': '//www.wainz.org.nz/static/uploaded-images/293044740516495894773979580551735086415', 'lng': '174.7408054897', 'id': 144}, 
-    // {'extension': 'jpg', 'image_name': 'Opihi River', 'lat': '-44.1697692409', 'path': '//www.wainz.org.nz/static/uploaded-images/305370187809105796995878458073365465441', 'lng': '170.9713518620', 'id': 147}, 
-    // {'extension': 'jpg', 'image_name': 'Whakamaru2013-2', 'lat': '-38.4108272709', 'path': '//www.wainz.org.nz/static/uploaded-images/257707619820531229678247493517074568808', 'lng': '175.8097457886', 'id': 125}]
-
     // Import data from API stored as JSON using jQuery (AJAX) 
     // TO BE COMPLETED
-    var done = false;
-    $.getJSON('/api/export', function(data) {
+    // var done = false;
+    // $.getJSON('/api/export', function(data) {
     	
-        $.each( data, function( key, val ) {
-        	if(key != "status"){
-            points.push(val);
-            // console.log(key+" "+ val.extension +" "+ val.image_name +" "+ val.path +" "+ val.lat +" "+ val.lng +" "+ val.id); // Something like this
-            // console.log(points.length)
-        }
+    //     $.each( data, function( key, val ) {
+    //     	if(key != "status"){
+    //         points.push(val);
+    //         // console.log(key+" "+ val.extension +" "+ val.image_name +" "+ val.path +" "+ val.lat +" "+ val.lng +" "+ val.id); // Something like this
+    //         // console.log(points.length)
+    //     }
             
-        });
+    //     });
         finish();
        
-    });
+    // });
 
     function finish(){
 
@@ -519,7 +489,7 @@ function initialize() {
         "This is a river that is good", "10/10/10", "River, No Cows, Clean", 0);
 
     for ( var i = 0; i < points.length; i++){
-    	// console6.log(points[i].extension +" "+ points[i].image_name +" "+ points[i].path +" "+ points[i].lat +" "+ points[i].lng +" "+ points[i].id);
+    	       console.log(points[i].image_name +"\t"+ points[i].path +"\t"+ points[i].extension +"\t"+  points[i].lat +"\t"+ points[i].lng +"\t"+points[i].date +"\t"+ points[i].id+"\t"+ points[i].tags+"\t"+ points[i].user);
         createMarkers(
             new google.maps.LatLng(points[i].lat, points[i].lng),
             null,

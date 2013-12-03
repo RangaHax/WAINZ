@@ -12,41 +12,86 @@
   js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<div class='row-fluid'>
-  <div class='span12'>
-    <h2>{{img.image_name}}</h2>
-    <!-- an ugly separator because the name looks goofy hanging out by itself -->
-    <div style='background-color:#556; height:3px; margin-bottom:5px'></div>
-  </div>
-  <div class='span11 well' style='text-align:center'>
-    <div id='map_container'>
-    </div>
-    <a href='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' title='{{img.image_name}}'><img id='img' src='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' height='400' alt='Image - {{img.image_name}}' /></a>
-  </div>
-  <div class='span12' id='img_details'>
-   {% if user.is_staff %} <a class='ttip' href='{% url "admin:wainz_image_change" img.id %}' rel='tooltip' title='Jump to admin panel'><i class='icon-wrench'></i></a> {% endif %}
-   <span class='detail'>Uploaded: {{img.submission_date}}</span>
-   <span class='detail'>
-     <a href='#' id='loc'> Location</a>: ({{img.latitude}}, {{img.longitude}})
-     <a href="#" id='share'>Share</a>
-   </span>
+
+<style>
+  #tag_container {   
+    width: auto;
+    display: none;
+  }
+  #tag_dialog {
+    width: 500px;
+    height: auto;
+    display: block;
+  }
+.fb-comments, .fb-comments span, .fb-comments.fb_iframe_widget span iframe {
+    width: 100% !important;
+}
+</style>
+<div class="container" style="padding-top: 5%">
+  <!-- <div id="fb-root"></div> -->
+  <!--<script src="//connect.facebook.net/en_US/all.js#appId=347343208688512&amp;xfbml=1"></script> -->
+  <script>
+            // function postonwall()
+            // {
+            //     FB.api('/WaiNewZealand/feed', 'post',
+            //     {
+            //         message: 'New Picture Online On The Wai NZ Site',
+            //         link:'http://{{ site.domain }}{% url "wainz.views.image" img.id %}',
+            //         name:'{{img.image_name}}',
+            //         picture:'http:{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}',
+            //         description:'Go to the link to find out ways of helping improve New Zealand&#39;s waterways'
+            //     }, function(response) {
+            //         if (!response || response.error) {
+            //             alert('Oops! User Denied Access');
+            //         } else {
+            //             alert('Success: Content Published');
+            //         }
+            //     });
+            // }
+          </script>
+
+          <div class='row-fluid'>
+            <div class='span12'>
+              <h2>{{img.image_name}}</h2>
+              <!-- an ugly separator because the name looks goofy hanging out by itself -->
+              <div style='background-color:#556; height:3px; margin-bottom:5px'></div>
+            </div>
+            <div class='span11 well' style='text-align:center'>
+              <div id='map_container'>
+              </div>
+              <a href='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' title='{{img.image_name}}'><img id='img' class="img-responsive" src='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' height='450' alt='Image - {{img.image_name}}' /></a>
+            </div>
+            <div class='span12' id='img_details'>
+             {% if user.is_staff %} <a class='ttip' href='{% url "admin:wainz_image_change" img.id %}' rel='tooltip' title='Jump to admin panel'><i class='icon-wrench'></i></a> {% endif %}
+             <span class='detail'>Uploaded: {{img.submission_date}}</span>
+             <span class='detail'>
+               <a href='#' id='loc'> Location</a>: ({{img.latitude}}, {{img.longitude}})
+             </span>
 
    <!--<span class='detail'>
    Share this image on Facebook - 
         <fb:login-button show-faces="false" width="200" max-rows="1"
 		perms="publish_stream" onlogin="postonwall()">Click to announce on Facebook</fb:login-button>
-   </span>-->
+ </span>-->
 
 
-   <br />
-   <span id='tags' class='detail'>Tags
-     {% for tag in image_tags %}
-       <span class='tag'>| {{tag.tag_text}} </span>
-     {% endfor %}
-   </span> 
-   {% if request.user.is_staff %}<a href="#" id='add_tag'>+</a>{% endif %}
+ <div class='row-fluid'>
+ <span id='tags' class='detail'>Tags
+   {% for tag in image_tags %}
+   <span class='tag'>| {{tag.tag_text}} </span>
+   {% endfor %}
+
+ </span> 
+ {% if request.user.is_staff %}<a href='#' id='add_tag'>+</a>
+   <div id="tag_container">
+    <div >Attach an existing tag, or add your own: 
+      <input type='text' id='tag_text' style='width:25%' autocomplete='off'></input>
+      {% csrf_token %}
+      <button class='btn btn-success' id='add_tag_submit' method=''>Submit</button>
+    </div>
   </div>
-
+ </div>
+{% endif %}
   <div class='row-fluid' style='padding:0 0 25px 50px'>
     <div class='span11'>
     <br />
@@ -58,54 +103,57 @@
                {{img.image_description}}
            {% endif %}
        </span>
-	<h3>Comments</h3>
+	
+
+
+</div></div>
+<div class='row-fluid'>
+<h3>Comments</h3>
 <div class="fb-comments" data-href="http://wainz.org.nz/image/{{img.id}}"  data-numposts="5" data-colorscheme="light"></div>
-    </div>
-  </div>
-
-
+</div>
 <div id='maps' style="height:450px; width:100%;"></div>
 {% endblock %}
 
 {% block page_specific_javascript %}
 <script type='text/javascript' src='{{ STATIC_URL }}js/login_prompt.js'></script>
 <script type='text/javascript'>
-{% autoescape off %}
-        {% if not user.is_authenticated %}
-            $(".vote").loginPrompt();
-        {% else %}
-         $("button.vote").click(function(e) {
-            e.preventDefault();
-            var actionURL = $(this).parent().attr("action");
-            var data = {                
-                "csrfmiddlewaretoken":$("#csrf").find('input').val(),
-            };
+  {% autoescape off %}
+  
+  {% if not user.is_authenticated %}
+  $(".vote").loginPrompt();
+  {% else %}
+  $("button.vote").click(function(e) {
+    e.preventDefault();
+    var actionURL = $(this).parent().attr("action");
+    var data = {                
+      "csrfmiddlewaretoken":$("#csrf").find('input').val(),
+    };
 
-            $(that).parent().attr("action", actionURL);
-            var that = this;
+    $(that).parent().attr("action", actionURL);
+    var that = this;
     
-            var actionList = actionURL.split('/');
+    var actionList = actionURL.split('/');
 
-           $.post(actionURL, data, function(data){
-               window.location.reload();
-            })
-             .error(function(data){
+    $.post(actionURL, data, function(data){
+     window.location.reload();
+   })
+    .error(function(data){
                 //TODO, display an error?
-             });
-         });
-         {% endif %}
-        $(".login-button").click(function() { $("div.login.alert").remove(); });
-        $("button.vote").click(function(e) {
-            e.preventDefault();
-            var actionURL = $(this).parent().attr("action");
-            var data = {                
-                "csrfmiddlewaretoken":$("#csrf").find('input').val(),
-            };
+              });
+  });
+  {% endif %}
+  $(".login-button").click(function() { $("div.login.alert").remove(); });
+  $("button.vote").click(function(e) {
+    e.preventDefault();
+    var actionURL = $(this).parent().attr("action");
+    var data = {                
+      "csrfmiddlewaretoken":$("#csrf").find('input').val(),
+    };
             //console.log(data);
             $.post(actionURL, data, function(data){
                 //TODO, alter to success icon
-            })
-             .error(function(data){
+              })
+            .error(function(data){
                 //TODO, display an error?
              });
          });
@@ -121,9 +169,10 @@
               "{{tag.tag_text}}", 
           {% endfor %}]
 {% endautoescape %}
+
 </script>
-<script type='text/javacript' src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js'></script>
+
 <script type="text/javascript"
-      src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&amp;sensor=true"></script>
+src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&amp;sensor=true"></script>
 <script type='text/javascript' src='{{ STATIC_URL }}js/image.js'></script>
 {% endblock %}

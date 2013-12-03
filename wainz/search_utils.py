@@ -45,11 +45,28 @@ def to_map_point(image):
     """
     Stringifies an image object to a dictionary, ready to be used by the maps javascript
     """
-    latlng = {}
-    latlng["id"] = int(image.id)
-    latlng["path"] = settings.STATIC_URL + 'uploaded-images/' + str(image.image_path)
-    latlng["lat"] = str(image.latitude)
-    latlng["lng"] = str(image.longitude)
-    latlng["image_name"] = str(image.image_name)
-    latlng["extension"] = str(image.extension)
-    return latlng
+    # latlng = {}
+    # latlng["id"] = int(image.id)
+    # latlng["path"] = settings.STATIC_URL + 'uploaded-images/' + str(image.image_path)
+    # latlng["lat"] = str(image.latitude)
+    # latlng["lng"] = str(image.longitude)
+    # latlng["image_name"] = str(image.image_name)
+    # latlng["extension"] = str(image.extension)
+
+    imageDict = {}
+    tags = ""
+    for Tag in image.tags.all():
+        tags += Tag.tag_text+" "
+    imageDict["id"] = int(image.id)
+    imageDict["lat"] = str(image.latitude)
+    imageDict["lng"] = str(image.longitude)
+    imageDict["extension"] = str(image.extension)
+    imageDict["path"] = settings.STATIC_URL + 'uploaded-images/' + str(image.image_path)
+    imageDict["description"] = str(image.image_description)
+    imageDict["image_name"] = str(image.image_name)
+    imageDict["date"] = str(image.submission_date.date())
+    imageDict["tags"] = str(tags)
+    imageDict["user"] = str(image.submitter)
+
+
+    return imageDict

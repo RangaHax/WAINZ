@@ -79,15 +79,22 @@ def add_tag(request):
     image page. This shares a lot of characteristics with adding a comment and
     could be generalised a bit better.
     """
+    print 'Entered Method'
     if request.method != 'POST':
-        return HttpResponseRedirect(reverse('wainz.views.composite'))
+        print 'Not a post Request'
+        return HttpResponseRedirect("/")
+
     else:
-        img_id = request.POST['id']
-        try:
+        print 'Post request made for add tag'
+        # print request
+        try:            
+            img_id = request.POST['id']
             img = Image.objects.get(pk=img_id)
         except:
-            return HttpResponseRedirect(reverse('wainz.views.composite'))
+            # return HttpResponseRedirect(reverse('wainz.views.composite'))
+            return HttpResponseRedirect("/");
         tag_val = request.POST['tag']
+        print tag_val
         try:
             tag = tag_utils.TagsFromText(tag_val)[0]
             added = True
@@ -95,6 +102,7 @@ def add_tag(request):
             img.save()
         except:
             added = False
+
         resp = rest.rest_success(request, img_id)
         respJson = json.loads(resp.content)
         respJson['added'] = added
@@ -151,7 +159,8 @@ def composite(request):
     latlngs = search_utils.filter_date(search_utils.min_date, now)
     points = [search_utils.to_map_point(image) for image in latlngs]
     context["latLngs"] = points
-    return render_to_response('wainz/composite.html',  context, context_instance = RequestContext(request))
+    # return render_to_response('wainz/composite.html',  context, context_instance = RequestContext(request))
+    return render_to_response('index.html',  context, context_instance = RequestContext(request))
 
 
 def search(request):
