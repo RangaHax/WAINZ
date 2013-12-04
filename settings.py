@@ -234,7 +234,6 @@ DEFAULT_FROM_EMAIL = 'WAINZ <wainztest@gmail.com>'
 
 INSTALLED_APPS = (
     "wainz",
-    "voting",
     "captcha",
     "registration",
     "django.contrib.admin",

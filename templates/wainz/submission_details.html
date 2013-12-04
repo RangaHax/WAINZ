@@ -42,8 +42,12 @@ background-color: #fff;
 						</div>
 						<div class="form-group col-lg-12">
 							<label for="name">Tags (Optional)</label>
-							<input type="text" id="tag_text" name="taginput" class="span4" /><a href="#" class='btn' id='add_tag'>Add</a>
+							<input type="text" id="tag_text" name="taginput" class="span4" autocomplete='off'></input><a href="#" class='btn' id='add_tag'>Add</a>
                          				<input type="hidden" id="tags" name="tags" />
+						</div>
+						<div class="form-group col-lg-12">
+							<label for="name">Tags:</label>
+							<span id="currentTags">None</span>
 						</div>
 						<div class="clearfix"></div>
 						<div class="form-group col-lg-12">
@@ -118,7 +122,13 @@ background-color: #fff;
       src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&sensor=true">
   </script>
   <script style="text/javascript" src="{{ STATIC_URL }}js/point_chooser.js"></script>   
-  <script type='text/javascript'>
+<!-- {{all_tags}} -->  
+<script type='text/javascript'>
+var typeAheadSource = [
+  {% for tag in all_tags %}
+      "{{tag.tag_text}}", 
+  {% endfor %}]
+$("#tag_text").typeahead({source:typeAheadSource});
     $(document).ready(function(){
         var tag_count = 0;
         $("#name").change(function() {
@@ -135,14 +145,19 @@ background-color: #fff;
             event.preventDefault();
             if($("#tag_text").val() == '') return;  
             $("#tags").val($("#tags").val()+$("#tag_text").val()+",");
+	    if($("#currentTags").html() == 'None') {
+		$("#currentTags").html($("#tag_text").val());
+	    }
+	    else {
+		$("#currentTags").html($("#currentTags").html()+" | "+$("#tag_text").val());
+	    }
             if(tag_count % 4 == 0){
                  $("<div class='row-fluid' id='tag_container_"+Math.floor(tag_count/4)+"'></div>").appendTo($("#tag_container"));
             }
-            var toAdd = $("#tag_container_"+Math.floor(tag_count/4));
-            $("<div class='alert alert-success span1 hide'>"+$("#tag_text").val()+"</div>").appendTo(toAdd).show('blind');
             tag_count++;
             $($("#tag_text")).val("");
         });
+	
     });
 
     function defaultGPS() {

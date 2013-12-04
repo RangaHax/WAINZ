@@ -15,7 +15,7 @@
   max-height: 100px;
 }
 #img {
-  max-height:450px;width:auto;margin-left:auto;margin-right:auto
+  max-height:450px;width:auto;margin-left:auto;margin-right:auto;vertical-align: middle
 }
 article,
 aside,
@@ -60,7 +60,7 @@ body {
   width: 41.66666666666667%;
   margin-left: 29%;
 }
-.ranga-top {margin-top:5%;}
+.ranga-top {margin-top:80px;}
 a:focus {
   outline: thin dotted;
 }

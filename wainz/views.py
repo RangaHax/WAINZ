@@ -15,7 +15,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
 
-from voting.models import Vote
 
 from datetime import datetime
 from django.utils.timezone import utc
@@ -150,18 +149,6 @@ def image_list(request):
     return render_to_response('wainz/gallery.html', {"images_and_votes": ordered_images(0, 30, request.user)}, context_instance = RequestContext(request))
 
 
-def composite(request):
-    context = {}
-    images = ordered_images(0, 12, request.user)
-    context["images_and_votes"] = enumerate(images)
-    context["images_length"] = len(images)
-    now = datetime.utcnow().replace(tzinfo=utc)
-    latlngs = search_utils.filter_date(search_utils.min_date, now)
-    points = [search_utils.to_map_point(image) for image in latlngs]
-    context["latLngs"] = points
-    # return render_to_response('wainz/composite.html',  context, context_instance = RequestContext(request))
-    return render_to_response('index.html',  context, context_instance = RequestContext(request))
-
 
 def search(request):
     """
@@ -285,11 +272,6 @@ def report_select(request):
     points = [search_utils.to_map_point(image) for image in latlngs]
     return render_to_response("wainz/suave_select.html", {"search_form":search_form, "latLngs":points, "typeAheadTags":Tag.objects.all()}, context_instance = RequestContext(request))
 
-
-def thanks(request):
-    return render_to_response('wainz/thanks.html', {}, context_instance = RequestContext(request))
-
-
 '''
 Login requred non-ajax accessible pages
 '''
@@ -309,7 +291,7 @@ def submit(request):
             with open(os.path.join("static/tmp/%s.%s" % (hashname, extension)), "w+") as imagePath:
                 imagePath.write(image.read())
 
-            ctx = RequestContext(request, {"hash":hashname, "extension":extension})
+            ctx = RequestContext(request, {"hash":hashname, "extension":extension, "all_tags":Tag.objects.all()})
             template = loader.get_template("wainz/submission_details.html")
 
             return HttpResponse(template.render(ctx))
@@ -319,9 +301,6 @@ def submit(request):
 
     return render_to_response("wainz/submit.html", dict(form=form), context_instance = RequestContext(request))
 
-#@login_required
-def submit_details(request):
-    return render_to_response("wainz/submit_details.html", {}, context_instance = RequestContext(request))
 
 def maps(request):
     """

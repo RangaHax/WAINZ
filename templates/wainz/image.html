@@ -3,7 +3,7 @@
 {% load wainz_tags %}
 {% block meta_title %}{{img.image_name}}{% endblock %}
 {% block main %}
-    <div class="container" style="padding-top: 5%">
+    <div class="container" style="padding-top: 80px">
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -27,7 +27,6 @@
     width: 100% !important;
 }
 </style>
-<div class="container" style="padding-top: 5%">
   <!-- <div id="fb-root"></div> -->
   <!--<script src="//connect.facebook.net/en_US/all.js#appId=347343208688512&amp;xfbml=1"></script> -->
   <script>
@@ -56,7 +55,7 @@
               <!-- an ugly separator because the name looks goofy hanging out by itself -->
               <div style='background-color:#556; height:3px; margin-bottom:5px'></div>
             </div>
-            <div class='span11 well' style='text-align:center'>
+            <div class='span11 well' style='text-align:center;'>
               <div id='map_container'>
               </div>
               <a href='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' title='{{img.image_name}}'><img id='img' class="img-responsive" src='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' height='450' alt='Image - {{img.image_name}}' /></a>
