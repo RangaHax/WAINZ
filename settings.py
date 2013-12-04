@@ -171,7 +171,8 @@ DATABASES = {
         "PORT": "",
     }
 }
-
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'wsgi.application'
 
 #########
 # PATHS #

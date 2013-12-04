@@ -90,8 +90,9 @@
 
 <div id="wrapper">
   <div id="map_canvas"></div>
-  <div id="map_controls">
+  <div class "dropdown" id="map_controls">
    <form>
+
     <select name="region" id="region" size="1">
      <option value="None">Hide All</option>
      <option value="Northland">Northland</option>
@@ -112,9 +113,11 @@
      <option value="Marlborough">Marlborough</option>
      <option value="All">Show All</option>
    </select>
-   <input type="button" id="rivers" name="rivers" value="Toggle Waterways"/>
+
+   <button id="rivers" name="rivers" value="Toggle Waterways" type="button" class="btn btn-default btn-xs">Toggle Waterways</button>
  </form>
 </div>
+
 </div>
 
 
