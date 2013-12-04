@@ -127,7 +127,10 @@
   {% for tag in all_tags %}
   "{{tag.tag_text}}", 
   {% endfor %}]
-  
+  var image_tags = [
+  {% for tag in image_tags %}
+      "{{tag.tag_text}}", 
+  {% endfor %}];
   $(".vote").loginPrompt();
   {% endif %}
   $(".login-button").click(function() { $("div.login.alert").remove(); });
@@ -146,19 +149,9 @@
              });
          });
 	
-        var lat = {{img.latitude}}, lng = {{img.longitude}}
-        var img_id = {{img.id}}
-
-        var current_uid = {{ user.id }}
-
-        var user_name = "{{ user }}"
-        var typeAheadSource = [
-          {% for tag in all_tags %}
-              "{{tag.tag_text}}", 
-          {% endfor %}]
+        var lat = {{img.latitude}}, lng = {{img.longitude}};
+        var img_id = {{img.id}};
 {% endautoescape %}
-
-
 </script>
 
 <script type="text/javascript"

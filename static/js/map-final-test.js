@@ -19,6 +19,7 @@ var regionFillOpacityShow = 0.00;
 var regionFillOpacityMouse = 0.32;
 var regionStrokeWeight = 1;
 var regionStrokeWeightShow = 3.1;
+var currentInfoWindow;
 google.maps.visualRefresh = true;
    
 
@@ -99,28 +100,33 @@ function displayRivers() {
 
 function createInfoWindow(fileName, title, description, date, tags, user, id) {
 
-    var contentString = '<style> ' +
-    '#content{word-wrap: break-word; max-width:400px;}' +
-    '#image {height:300px; width:400px; }' +
-    '#image img{max-width:100%; max-height:100%; margin:auto; display:block; -ms-interpolation-mode: bicubic}' +
-    '</style>' +
-    '<div id="content">' +
-    '<div id="siteNotice">' +
-    '</div>' +
-    '<h2 id="firstHeading" class="firstHeading"> '+ title + '</h2>' +
-    '<div id = "image">' +
-    '<a href="'+ fileName + '" target="_blank" ><img src="' +fileName +'" /></img></a>' +
-    '</div>' +
-    '<div id="bodyContent">' +
+    var contentString =    
+    '<div style=" display:block;max-width:250px; width:100%;padding-left:3px; margin-left: auto; margin-right: auto;">'+
+    '<h2> '+ title + '</h2>' +
+    '<div class = "thumbnail">' +
+    '<a href="'+'/image/'+id+''+ '"><img class=thumbnail src="' +fileName +'" /></img></a>' +    
+    '<div class ="caption">'+
     '<p><b>Description:</b> '+ description +'</p>' +
     '<p><b>Uploaded:</b> '+ date +'</p>' +
     '<p><b>Tags:</b> ' + tags +'</p>' +
     '<p><b>Submitted by:</b> ' + user +'</p>' +
-    '</div>' +
-    '<button type="button" onclick="window.open('+"'"+'/image/'+id+''+"'"+');" >More Details</button>'+
+    '</div>'+
+    '</div>'+
+    '<div class="btn-group btn-group-justified">'+
+    '<a type="button" class="btn btn-info" onclick="location.href='+"'"+'/image/'+id+''+"'"+'" >Details</a>'+
+    // '<a type="button" class="btn btn-danger" onclick="location.href='+"'"+'/image/'+id+''+"'"+'" >Delete</a>'+
+    '<a type="button" class="btn btn-default" href="#" onclick="closeAllInfoWindows()"">Close</a'+
+    '</div>'+
     '</div>';
+    // '<button type="button" class="btn btn-danger" onclick="location.href='+"'"+'/image/'+id+''+"'"+'" >Delete</button>';
+     
+    
+    
+    
+
     info = new google.maps.InfoWindow({
         content: contentString
+        
     });
 
 return info;
@@ -173,16 +179,19 @@ function toggleRegionMarkers(region) {
         }
     }
 }
-
-//------------------Adds an event listener to a marker to open/close its infowindow
-function addMarkerListener(marker) {
-    google.maps.event.addListener(marker, 'click', function() {
-        for ( var i = 0; i < regions.length; i++) {
+function closeAllInfoWindows(){
+    for ( var i = 0; i < regions.length; i++) {
             for ( var j = 0; j < regions[i].markers.length; j++) {
-                if (regions[i].markers[j] != marker)
+                // if (regions[i].markers[j] != marker)
                 regions[i].markers[j].info.close(); // close all other info windows
         }
     }
+}
+//------------------Adds an event listener to a marker to open/close its infowindow
+function addMarkerListener(marker) {
+    google.maps.event.addListener(marker, 'click', function() {
+
+        closeAllInfoWindows()
     if (marker.info.getMap() == null)
         marker.info.open(map, marker);
     else
@@ -489,11 +498,11 @@ function initialize() {
         "This is a river that is good", "10/10/10", "River, No Cows, Clean", 0);
 
     for ( var i = 0; i < points.length; i++){
-    	       console.log(points[i].image_name +"\t"+ points[i].path +"\t"+ points[i].extension +"\t"+  points[i].lat +"\t"+ points[i].lng +"\t"+points[i].date +"\t"+ points[i].id+"\t"+ points[i].tags+"\t"+ points[i].user);
+    	       // console.log(points[i].image_name +"\t"+ points[i].path +"\t"+ points[i].extension +"\t"+  points[i].lat +"\t"+ points[i].lng +"\t"+points[i].date +"\t"+ points[i].id+"\t"+ points[i].tags+"\t"+ points[i].user);
         createMarkers(
             new google.maps.LatLng(points[i].lat, points[i].lng),
             null,
-            createInfoWindow("" + points[i].path + "."
+            createInfoWindow("" + points[i].path + "-thumb."
                 + points[i].extension + "", points[i].image_name,
                 points[i].description, points[i].date, points[i].tags, points[i].user ,points[i].id));
     }
