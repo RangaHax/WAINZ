@@ -8,7 +8,7 @@
   <meta name="description" content="{% block meta_description %}{% endblock %}">
   <meta name="author" content="">
   <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
-  <link href="http://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet" type="text/css">
+  
 
   <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
   {% block page_style %}{% endblock %}
@@ -31,7 +31,9 @@
       <script src="{% static "js/jquery.js" %}"></script>
       <script src="{% static "js/bootstrap.min.js" %}"></script>
       <script src="{% static "js/jquery-ui.js" %}"></script>
-      <script src="{% static "js/bootstrap-typeahead.js" %}"></script>
+      <script src="{% static "js/bootstrap-typeahead.js" %}"></script>      
+      <link href="http://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet" type="text/css">
+
 
     </head>
 <!-- NAVBAR
@@ -83,9 +85,8 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     {% block javascriptincludes %}
-    
-
-
+          
+      
     {% endblock %}
     {%block page_specific_javascript %}<!-- debug -->{% endblock %}
     {% editable_loader %}

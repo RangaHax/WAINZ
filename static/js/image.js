@@ -1,41 +1,40 @@
+$( "#river" ).click(function(event){
+   displayRivers();
+ });
 $(document).ready(function(){
   $(".ttip").tooltip()
 
-  var center = new google.maps.LatLng(lat, lng);
-  var mapOptions = {
-   center: center,
-   zoom: 7,
-   zoomControl:false,
-   streetViewControl:false,
-   panControl:false, 
-   mapTypeId: google.maps.MapTypeId.ROADMAP
- };         
- map = new google.maps.Map(document.getElementById("maps"), mapOptions)
- var markerOpts = {map:map, position: center}
- var marker = new google.maps.Marker(markerOpts);         
+ var imgLocation = new google.maps.LatLng(lat, lng);
+ var marker = new google.maps.Marker({map:map, position: imgLocation});
+       
+ // marker.setVisible(true);
  var firstTimeRound = true;
  var mapShowing = false;
       /*Edited to display properly
       Sort of, when changing to map will link to top of page*/
-      $("#maps").hide();
-      google.maps.event.addListener(map, 'tilesloaded', function(){
+
        if(firstTimeRound){
          firstTimeRound = !firstTimeRound;
-         $("#map_container").append($("#maps"));
+         
+         $("#map_container").append($("#map_canvas"));
+         
        };
-     });     
+     
 
 
          $("#loc").click(function(e){
          
           if (!mapShowing) {
           $("#img").hide();
-          $("#maps").effect("fade",800);
-          google.maps.event.trigger(map, 'resize');
-          map.setCenter(center);
+          $("#map_canvas").effect("fade",800);
+          $("#river").show("fade",800);
+            google.maps.event.trigger(map, 'resize');
+            map.setCenter(imgLocation);
+            marker.setMap(map);  
           }
           else{
-          	$("#maps").hide();
+          	$("#map_canvas").hide();
+            $("#river").hide();
           	$("#img").effect("fade",400);
           }
           mapShowing = !mapShowing;

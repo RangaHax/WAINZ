@@ -19,7 +19,6 @@ var regionFillOpacityShow = 0.00;
 var regionFillOpacityMouse = 0.32;
 var regionStrokeWeight = 1;
 var regionStrokeWeightShow = 3.1;
-var currentInfoWindow;
 google.maps.visualRefresh = true;
    
 
@@ -101,28 +100,25 @@ function displayRivers() {
 function createInfoWindow(fileName, title, description, date, tags, user, id) {
 
     var contentString =    
-    '<div style=" display:block;max-width:250px; width:100%;padding-left:3px; margin-left: auto; margin-right: auto;">'+
+    '<div class="panel panel-info" style=" display:block;max-width:258px; width:100%; margin-left: auto; margin-right: auto;">'+
+    '<div class="panel-heading">'+
     '<h2> '+ title + '</h2>' +
-    '<div class = "thumbnail">' +
-    '<a href="'+'/image/'+id+''+ '"><img class=thumbnail src="' +fileName +'" /></img></a>' +    
-    '<div class ="caption">'+
+    '</div>'+
+    '<a href="'+'/image/'+id+''+ '"><img style="width:100%; margin-left: auto; margin-right: auto;" class="img-thumbnail" src="' +fileName +'" /></img></a>' +    
+    '<div class ="panel-footer">'+
     '<p><b>Description:</b> '+ description +'</p>' +
     '<p><b>Uploaded:</b> '+ date +'</p>' +
     '<p><b>Tags:</b> ' + tags +'</p>' +
     '<p><b>Submitted by:</b> ' + user +'</p>' +
-    '</div>'+
     '</div>'+
     '<div class="btn-group btn-group-justified">'+
     '<a type="button" class="btn btn-info" onclick="location.href='+"'"+'/image/'+id+''+"'"+'" >Details</a>'+
     // '<a type="button" class="btn btn-danger" onclick="location.href='+"'"+'/image/'+id+''+"'"+'" >Delete</a>'+
     '<a type="button" class="btn btn-default" href="#" onclick="closeAllInfoWindows()"">Close</a'+
     '</div>'+
+    '</div>'+
     '</div>';
     // '<button type="button" class="btn btn-danger" onclick="location.href='+"'"+'/image/'+id+''+"'"+'" >Delete</button>';
-     
-    
-    
-    
 
     info = new google.maps.InfoWindow({
         content: contentString
@@ -137,7 +133,8 @@ return info;
 function createMarkers(location, iconName, info) {
     var bool = false;
     if(iconName == null){
-        iconName = window.location.href +'../static/img/brown-drop.png';
+        iconName = '../static/img/brown-drop.png';
+        
     }
 
     for ( var i = 0; i < regions.length; i++) {
@@ -254,10 +251,44 @@ function AddEventHandlers(region) {
 }
 
 //-----------------Determine the selected region
+function regionDropdown(selectedRegion) {
+      DeselectRegions();
+
+        if (selectedRegion == "All") {
+            for ( var i = 0; i < regions.length; i++) {
+                regions[i].text.setMap(null);
+                regions[i].polygon.setOptions({
+                    fillColor : regionFillColShow,
+                    fillOpacity : regionFillOpacityShow,
+                    strokeColor : regionStrokeColShow,
+                    strokeWeight : regionStrokeWeightShow
+                });
+                for ( var j = 0; j < regions[i].markers.length; j++) {
+                    regions[i].markers[j].setVisible(true);
+                }
+            }
+        } else {
+            for ( var i = 0; i < regions.length; i++) {
+                if (selectedRegion == regions[i].name) {
+                    regions[i].text.setMap(null);
+                    regions[i].polygon.setOptions({
+                        fillColor : regionFillColShow,
+                        fillOpacity : regionFillOpacityShow,
+                        strokeColor : regionStrokeColShow,
+                        strokeWeight : regionStrokeWeightShow
+                    });
+                    toggleRegionMarkers(regions[i]);
+                    break;
+                }
+            }
+        }
+    }
+
+
 function regionSelector(regionPoly) {
+    
     if (regionPoly == null) { // multibox control
         DeselectRegions();
-        var regionName = document.getElementById("region").value; // multibox value
 
         if (regionName == "All") {
             for ( var i = 0; i < regions.length; i++) {
@@ -494,9 +525,6 @@ function initialize() {
 
     function finish(){
 
-    var defaultInfo = createInfoWindow("river1.jpg", "A River",
-        "This is a river that is good", "10/10/10", "River, No Cows, Clean", 0);
-
     for ( var i = 0; i < points.length; i++){
     	       // console.log(points[i].image_name +"\t"+ points[i].path +"\t"+ points[i].extension +"\t"+  points[i].lat +"\t"+ points[i].lng +"\t"+points[i].date +"\t"+ points[i].id+"\t"+ points[i].tags+"\t"+ points[i].user);
         createMarkers(
@@ -547,6 +575,10 @@ function initialize() {
         }
     }
     //-----------------Load the river + lake overlay
+
+    // var imgLocation =new google.maps.LatLng(-41, 172);
+    // var marker = new google.maps.Marker({map:map, position: imgLocation});
+    // marker.setMap(map);
     loadLayers();
 }
     
