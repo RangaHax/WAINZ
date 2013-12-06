@@ -4,16 +4,11 @@
 {% block meta_title %}{{img.image_name}}{% endblock %}
 {% block main %}
     <div class="container" style="padding-top: 80px">
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+
 
 <style>
+#map_controls { position: relative; width: 100px; }
+#wrapper { position: absolute; }
   #tag_container {   
     width: auto;
     display: none;
@@ -30,6 +25,8 @@
   <!-- <div id="fb-root"></div> -->
   <!--<script src="//connect.facebook.net/en_US/all.js#appId=347343208688512&amp;xfbml=1"></script> -->
   <script>
+        
+      
             // function postonwall()
             // {
             //     FB.api('/WaiNewZealand/feed', 'post',
@@ -50,22 +47,41 @@
           </script>
 
           <div class='row-fluid'>
-            <div class='span12'>
+            <div class='panel panel-info'>
+            <div class="panel-heading">
               <h2>{{img.image_name}}</h2>
               <!-- an ugly separator because the name looks goofy hanging out by itself -->
-              <div style='background-color:#556; height:3px; margin-bottom:5px'></div>
+              
             </div>
-            <div class='span11 well' style='text-align:center;'>
+            <div class="panel-body">
+            
+            <div class='span11' style='text-align:center;'>
               <div id='map_container'>
               </div>
-              <a href='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' title='{{img.image_name}}'><img id='img' class="img-responsive" src='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' height='450' alt='Image - {{img.image_name}}' /></a>
+              <a  href='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' title='{{img.image_name}}'><img id='img' class="img-responsive" src='{{ STATIC_URL }}uploaded-images/{{img.image_path}}.{{img.extension}}' height='450' alt='Image - {{img.image_name}}' /></a>
             </div>
+            </div>
+            <div class="panel-footer">
             <div class='span12' id='img_details'>
              {% if user.is_staff %} <a class='ttip' href='{% url "admin:wainz_image_change" img.id %}' rel='tooltip' title='Jump to admin panel'><i class='icon-wrench'></i></a> {% endif %}
-             <span class='detail'>Uploaded: {{img.submission_date}}</span>
-             <span class='detail'>
-               <a href='#' id='loc'> Location</a>: ({{img.latitude}}, {{img.longitude}})
-             </span>
+            <div>
+            <div class="btn-group">
+            <button type="button" href='#' id='loc' class="btn btn-primary btn-sm">Toggle map</button>
+             <button type="button" sytle="display:none;" href='#' id='river'class="btn btn-info btn-sm">Toggle Rivers</button>
+              
+            </div>
+
+            Location: ({{img.latitude}}, {{img.longitude}})</div>            
+            
+            
+            
+            <div class=''>Uploaded: {{img.submission_date}}</div>
+            </div> 
+             
+
+             
+
+
 
    <!--<span class='detail'>
    Share this image on Facebook - 
@@ -92,6 +108,7 @@
   </div>
  </div>
 {% endif %}
+</div>
   <div class='row-fluid' style='padding:0 0 25px 50px'>
     <div class='span11'>
     <br />
@@ -106,19 +123,25 @@
 	
 
 
-</div></div>
+</div></div></div>
 <div class='row-fluid'>
+
 <h3>Comments</h3>
 <div class="fb-comments" data-href="http://wainz.org.nz/image/{{img.id}}"  data-numposts="5" data-colorscheme="light"></div>
 </div>
-<div id='maps' style="height:450px; width:100%;"></div>
+
+
+
+<div id="map_canvas" style="height:450px; width:100%;"></div>
+
 {% endblock %}
 
 {% block page_specific_javascript %}
 <script type='text/javascript' src='{{ STATIC_URL }}js/login_prompt.js'></script>
 <script type='text/javascript'>
   {% autoescape off %}
-  
+  $("#map_canvas").hide();
+      $("#river").hide();
   {% if user.is_authenticated %}
   var current_uid = {{ user.id }}
 
@@ -154,7 +177,18 @@
 {% endautoescape %}
 </script>
 
-<script type="text/javascript"
-src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&amp;sensor=true"></script>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/map-coords.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&libraries=geometry&sensor=false"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/map-final-test.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/maplabel-compiled.js"></script>
 <script type='text/javascript' src='{{ STATIC_URL }}js/image.js'></script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 {% endblock %}

@@ -6,7 +6,6 @@ $(document).ready(function(){
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions)
-        console.log("failo")
         attachMarker(map, university);
         $("#lat").val(university.lat());
         $("#lng").val(university.lng());
@@ -21,17 +20,25 @@ function attachMarker(map, position){
         };
         var marker = new google.maps.Marker(markerOpts);
         
-        google.maps.event.addListener(marker, "mousedown", function(data){
-            clicked = true;
+        google.maps.event.addListener(map, "mousedown", function(data){
+
+            
         });
+        google.maps.event.addListener(map, "mouseup", function(data){
+        	// console.log("unclicked");
+        	marker.setPosition(new google.maps.LatLng(data.latLng.lat(),data.latLng.lng()));
+        	$("#lat").val(data.latLng.lat());
+            $("#lng").val(data.latLng.lng());
+            
+        });
+
         google.maps.event.addListener(marker, "mouseup", function(data){
-            clicked = false;
+        	$("#lat").val(data.latLng.lat());
+            $("#lng").val(data.latLng.lng());
+            
         });
-        google.maps.event.addListener(map, "mousemove", function(data){
-            if(clicked){
-                //console.log(data.latLng.lat);
-                $("#lat").val(data.latLng.lat());
-                $("#lng").val(data.latLng.lng());
-            }
-        });
+
+
+
+
 }

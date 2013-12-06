@@ -13,8 +13,10 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/map-final-test.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/maplabel-compiled.js"></script>
 <script>
- $("#map_controls").on('change','#region', function(event){
-   regionSelector();
+ $( "#region" ).click(function(event){
+    console.log(event.target.id);
+    var regionName = event.target.id;
+   regionDropdown(regionName);
  });
 
  $("#map_controls").on('click','#rivers', function(event){
@@ -91,31 +93,34 @@
 <div id="wrapper">
   <div id="map_canvas"></div>
   <div class "dropdown" id="map_controls">
-   <form>
-
-    <select name="region" id="region" size="1">
-     <option value="None">Hide All</option>
-     <option value="Northland">Northland</option>
-     <option value="Auckland">Auckland</option>
-     <option value="Waikato">Waikato</option>
-     <option value="West Coast">West Coast</option>
-     <option value="Bay of Plenty">Bay of Plenty</option>
-     <option value="Canterbury">Canterbury</option>
-     <option value="Gisborne">Gisborne</option>
-     <option value="Otago">Otago</option>
-     <option value="Southland">Southland</option>
-     <option value="Hawke's Bay">Hawke's Bay</option>
-     <option value="Tasman">Tasman</option>
-     <option value="Taranaki">Taranaki</option>
-     <option value="Manawatu-Wanganui">Manawatu-Wanganui</option>
-     <option value="Nelson">Nelson</option>
-     <option value="Wellington">Wellington</option>
-     <option value="Marlborough">Marlborough</option>
-     <option value="All">Show All</option>
-   </select>
-
-   <button id="rivers" name="rivers" value="Toggle Waterways" type="button" class="btn btn-default btn-xs">Toggle Waterways</button>
- </form>
+  <button id="rivers" name="rivers" value="Toggle Waterways" type="button" class="btn btn-info btn-sm">Toggle Waterways</button>
+  <div class="btn-group">
+  <button type="button" class="btn btn-success dropdown-toggle btn-md" data-toggle="dropdown">
+    Select Region <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" id="region"  role="menu">
+    <li><a href="#" id ="None">Hide All</a></li>
+    <li class="divider"></li>
+    <li><a  href="#" id="Northland">Northland</a></li>
+    <li><a href="#" id="Auckland">Auckland</a></li>
+    <li><a href="#" id="Waikato">Waikato</a></li>
+    <li><a href="#" id="West Coast">West Coast</a></li>
+    <li><a href="#" id="Bay of Plenty">Bay of Plenty</a></li>
+    <li><a href="#" id="Canterbury">Canterbury</a></li>
+    <li><a href="#" id="Gisborne">Gisborne</a></li>
+    <li><a href="#" id="Otago">Otago</a></li>
+    <li><a href="#" id="Southland">Southland</a></li>
+    <li><a href="#" id="Hawkes Bay">Hawkes Bay</a></li>
+    <li><a href="#" id="Tasman">Tasman</a></li>
+    <li><a href="#" id="Taranaki">Taranaki</a></li>
+    <li><a href="#" id="Manawatu-Wanganui">Manawatu-Whanganui</a></li>
+    <li><a href="#" id="Nelson">Nelson</a></li>
+    <li><a href="#" id="Wellington">Wellington</a></li>
+    <li><a href="#" id="Malborough">Malborough</a></li>
+    <li class="divider"></li>
+    <li><a href="#" id="All">Show All</a></li>
+  </ul>
+</div>
 </div>
 
 </div>
