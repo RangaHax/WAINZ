@@ -1,4 +1,5 @@
 $( "#river" ).click(function(event){
+  event.preventDefault();
    displayRivers();
  });
 $(document).ready(function(){
@@ -23,6 +24,7 @@ $(document).ready(function(){
 
 
          $("#loc").click(function(e){
+          e.preventDefault();
          
           if (!mapShowing) {
           $("#img").hide();

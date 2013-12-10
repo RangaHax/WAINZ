@@ -2,89 +2,115 @@
 {% block meta_title %}Details{% endblock %}
 {% block page_style %}
 <style>
-#map_canvas {
-width:100%;
-height: 500px;
-background-color: #fff;
-}
+	#map_canvas {
+		width:100%;
+		margin-left: auto;
+		margin-right: auto;
+		height: 450px;
+		background-color: #fff;
+	}
 </style>
 {% endblock %}
- {% block main %}
+{% block main %}
 <div class="container" style="padding-top: 5%">
 
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">
+				Photo Upload <small>Enter image details and location</small>
+			</h1>
+		</div>
+	</div>
+	<div class="row" style="padding-bottom: 0px; padding-top: 2%">
+		<div class="col-lg-7">
 
-<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">
-					Photo Upload <small>Enter image details</small>
-				</h1>
-			</div>
-			<div class="col-lg-6">
-				<center>
-					<h3>Location</h3>
-				</center>
-				<div class="row">
-				<!--<div style="width:100%;height:100%background-color:red;"></div>-->
-				<div class="gmaps3" id="map_canvas"></div>
+			<div class="panel panel-info">
+
+				<div class="panel-heading">
+					<h3>Image</h3>
 				</div>
-					
-
+				<img src="{{ STATIC_URL }}tmp/{{hash}}.{{extension}}" style="max-width:100%; max-height: 500px; margin-left: auto; margin-right: auto;" /></img>
 			</div>
-			<div class="col-lg-6">
-				<center>
-					<h3>Details</h3>
-				</center>
+		</div>
+
+
+		<div class="col-lg-5"style="height: 100%;">
+			<div class="panel panel-success">
+
+				<div class="panel-heading">
+					<h3 >Details</h3>
+				</div>
+				<div class="panel-footer">
 				<form action="{% url "wainz.forms.submission_details" %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-					<div class="row" style="padding-top: 5%">
-						<div class="form-group col-lg-12">
-							<label for="name">Image Name</label>
-							 <input type="text" id="name" name="imageName" class="span4" maxlength="100" placeholder="Image Name" />
-						</div>
-						<div class="form-group col-lg-12">
-							<label for="name">Tags (Optional)</label>
-							<input type="text" id="tag_text" name="taginput" class="span4" autocomplete='off'></input><a href="#" class='btn' id='add_tag'>Add</a>
-                         				<input type="hidden" id="tags" name="tags" />
-						</div>
-						<div class="form-group col-lg-12">
-							<label for="name">Tags:</label>
-							<span id="currentTags">None</span>
-						</div>
-						<div class="clearfix"></div>
-						<div class="form-group col-lg-12">
-							<label for="description">Image Description</label>
-							<textarea id="description" name="description" class="form-control4" rows="6" ></textarea>
-						</div>
-						<input type="hidden" name="hash" value="{{hash}}" >
-						<input type="hidden" name="extension" value="{{extension}}" >
 
-						<div class="form-group col-lg-12">
-							<label for="lng">Longitude</label>
-							<input class="span4" id="lng" name="longitude" type="text" value="" readonly="readonly" />
-						</div>
-						<div class="form-group col-lg-12">
-							<label for="lng">Latitude</label>
-							<input class="span4" id="lat" name="latitude" type="text" value="" readonly="readonly" />
-						</div>
-						<div class="form-group col-lg-12">
-							<input type="hidden" name="save" value="contact">
-							<button type="submit" class="btn btn-primary">Submit</button>
-						</div>
+
+					<div class="form-group col-lg-12">
+						<label for="name">Image Name</label>
+						<input style="width: 100%" type="text" id="name" name="imageName" class="span4" maxlength="100" placeholder="Image Name" />
 					</div>
+					<div class="form-group col-lg-12">
+						<label for="name">Tags (Optional)</label>
+						<input style="width: 100%" type="text" id="tag_text" name="taginput" class="span4" autocomplete='off'></input><a type="button" href="#" class='btn btn-default' id='add_tag'>Add</a>
+						<input type="hidden" id="tags" name="tags" />
+					</div>
+					<div class="form-group col-lg-12">
+						<label for="name">Tags:</label>
+						<span id="currentTags">None</span>
+					</div>
+					<div class="clearfix"></div>
+					<div class="form-group col-lg-12">
+						<label for="description">Image Description</label>
+						<textarea style="width: 100%" id="description" name="description" class="form-control4" rows="6" ></textarea>
+					</div>
+					<input type="hidden" name="hash" value="{{hash}}" >
+					<input type="hidden" name="extension" value="{{extension}}" >
+
+					<div class="form-group col-lg-12">
+						<label for="lng">Longitude</label>
+						<input class="span4" id="lng" name="longitude" type="text" value="" readonly="readonly" />
+					</div>
+					<div class="form-group col-lg-12">
+						<label for="lng">Latitude</label>
+						<input class="span4" id="lat" name="latitude" type="text" value="" readonly="readonly" />
+					</div>
+					<div class="form-group col-lg-12">
+						<input type="hidden" name="save" value="contact">
+						<button type="submit" class="btn btn-lg btn-success">Upload Image</button>
+					</div>
+
 				</form>
-			</div>
-		</div>
-
-
-<div class="row" style="padding-top: 5%">
-			<div class="col-lg-12">
-				<div class="panel panel-default" style="padding-left: 2.5%;padding-right:2.5%">
-					<center>
-						<h3>Image</h3>
-					</center>
-					<img src="{{ STATIC_URL }}tmp/{{hash}}.{{extension}}" style="max-width:100%; max-height 100%" />
 				</div>
 			</div>
 		</div>
+
+	</div>
+	<div class="row" style="padding-bottom: 5%; padding-top: 0px">
+		<div class="col-lg-12">
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3>Location<small>          Drag and drop the marker, or tap to choose location</small></h3>
+				</div>
+				<div class="gmaps3" id="map_canvas"></div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -118,52 +144,52 @@ background-color: #fff;
 {% endblock %}
 
 {%block page_specific_javascript %}
-  <script type="text/javascript"
-      src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&sensor=true">
-  </script>
-  <script style="text/javascript" src="{{ STATIC_URL }}js/point_chooser.js"></script>   
+<script type="text/javascript"
+src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&sensor=true">
+</script>
+<script style="text/javascript" src="{{ STATIC_URL }}js/point_chooser.js"></script>   
 <!-- {{all_tags}} -->  
 <script type='text/javascript'>
-var typeAheadSource = [
-  {% for tag in all_tags %}
-      "{{tag.tag_text}}", 
-  {% endfor %}]
-$("#tag_text").typeahead({source:typeAheadSource});
-    $(document).ready(function(){
-        var tag_count = 0;
-        $("#name").change(function() {
-            if($("#name-error").css("display") !== "none") $("#name-error").hide('slow');
-        });
-        $("#submit").click(function(e){
+	var typeAheadSource = [
+	{% for tag in all_tags %}
+	"{{tag.tag_text}}", 
+	{% endfor %}]
+	$("#tag_text").typeahead({source:typeAheadSource});
+	$(document).ready(function(){
+		var tag_count = 0;
+		$("#name").change(function() {
+			if($("#name-error").css("display") !== "none") $("#name-error").hide('slow');
+		});
+		$("#submit").click(function(e){
             //console.log(e);
             if($("#name").val() === ""){
-                e.preventDefault();
-                $("#name-error").show('slow');
+            	e.preventDefault();
+            	$("#name-error").show('slow');
             }
         });
-        $("#add_tag").click(function(event){
-            event.preventDefault();
-            if($("#tag_text").val() == '') return;  
-            $("#tags").val($("#tags").val()+$("#tag_text").val()+",");
-	    if($("#currentTags").html() == 'None') {
-		$("#currentTags").html($("#tag_text").val());
-	    }
-	    else {
-		$("#currentTags").html($("#currentTags").html()+" | "+$("#tag_text").val());
-	    }
-            if(tag_count % 4 == 0){
-                 $("<div class='row-fluid' id='tag_container_"+Math.floor(tag_count/4)+"'></div>").appendTo($("#tag_container"));
-            }
-            tag_count++;
-            $($("#tag_text")).val("");
-        });
-	
-    });
+		$("#add_tag").click(function(event){
+			event.preventDefault();
+			if($("#tag_text").val() == '') return;  
+			$("#tags").val($("#tags").val()+$("#tag_text").val()+",");
+			if($("#currentTags").html() == 'None') {
+				$("#currentTags").html($("#tag_text").val());
+			}
+			else {
+				$("#currentTags").html($("#currentTags").html()+" | "+$("#tag_text").val());
+			}
+			if(tag_count % 4 == 0){
+				$("<div class='row-fluid' id='tag_container_"+Math.floor(tag_count/4)+"'></div>").appendTo($("#tag_container"));
+			}
+			tag_count++;
+			$($("#tag_text")).val("");
+		});
 
-    function defaultGPS() {
-        if($("#lat").val() === "-41.29009971493793" && $("#lng").val() === "174.76815266036988") {
-            return confirm("Do you want to leave the location values unchanged?");
-        }
-    }
-  </script>
+	});
+
+	function defaultGPS() {
+		if($("#lat").val() === "-41.29009971493793" && $("#lng").val() === "174.76815266036988") {
+			return confirm("Do you want to leave the location values unchanged?");
+		}
+	}
+</script>
 {% endblock %}

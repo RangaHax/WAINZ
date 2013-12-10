@@ -100,13 +100,13 @@ function displayRivers() {
 function createInfoWindow(fileName, title, description, date, tags, user, id) {
 
     var contentString =    
-    '<div class="panel panel-info" style=" display:block;max-width:258px; width:100%; margin-left: auto; margin-right: auto;">'+
+    '<div class="panel panel-info" style=" display:block;max-width:258px; width:100%; margin-left: auto; margin-right: auto; word-wrap: break-word;">'+
     '<div class="panel-heading">'+
     '<h2> '+ title + '</h2>' +
     '</div>'+
     '<a href="'+'/image/'+id+''+ '"><img style="width:100%; margin-left: auto; margin-right: auto;" class="img-thumbnail" src="' +fileName +'" /></img></a>' +    
-    '<div class ="panel-footer">'+
-    '<p><b>Description:</b> '+ description +'</p>' +
+    '<div class ="panel-footer" >'+
+    '<p ><b>Description:</b> '+ description +'</p>' +
     '<p><b>Uploaded:</b> '+ date +'</p>' +
     '<p><b>Tags:</b> ' + tags +'</p>' +
     '<p><b>Submitted by:</b> ' + user +'</p>' +

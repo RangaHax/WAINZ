@@ -8,8 +8,8 @@
 {% blocktrans %}
 <!-- Carousel
     ================================================== -->
-    <div id="myCarousel" class="carousel slide">
-      <div class="carousel-inner">
+    <div id="myCarousel" class="carousel slide" >
+      <div class="carousel-inner" >
         <div class="item active">
           <img src="{{ STATIC_URL }}images/nature.jpg" class="img-responsive" alt="First slide">
           <div class="container">
@@ -19,13 +19,14 @@
               </center>
               <h1>What we do?</h1>
               <p>WAI NZ is a national grassroots organisation that aims to reduce freshwater pollution by using technology to empower the public to be kaitiaki (the guardians) of our waterways. We are tackling freshwater issues by giving the public the power to record and report on pollution or enhancement of freshwater from anywhere in the country. In collaboration with Victoria University we continue to research and develop cutting edge technology for the monitoring of freshwater resources. </p>
-              <p><a class="btn btn-large btn-primary" href="#">Sign up today</a></p>
+              <!-- <p><a class="btn btn-large btn-primary" href="#">Sign up today</a></p> -->
             </div>
           </div>
         </div>
       </div>
 
     </div><!-- /.carousel -->
+
       <style>
         #wrapper { position: relative; }
         #map_controls { position: absolute; width: 100px; left: 5px; top: 5px;}
@@ -56,31 +57,37 @@
         <div class="col-md-7" style="padding-top:10%;  padding-right:10%">
               <div id="wrapper">
     <div id="map_canvas"></div>
-    <div id="map_controls">
-      <form>
-        <select name="region" id="region" size="1">
-          <option value="None">Hide All</option>
-          <option value="Northland">Northland</option>
-          <option value="Auckland">Auckland</option>
-          <option value="Waikato">Waikato</option>
-          <option value="West Coast">West Coast</option>
-          <option value="Bay of Plenty">Bay of Plenty</option>
-          <option value="Canterbury">Canterbury</option>
-          <option value="Gisborne">Gisborne</option>
-          <option value="Otago">Otago</option>
-          <option value="Southland">Southland</option>
-          <option value="Hawke's Bay">Hawke's Bay</option>
-          <option value="Tasman">Tasman</option>
-          <option value="Taranaki">Taranaki</option>
-          <option value="Manawatu-Wanganui">Manawatu-Wanganui</option>
-          <option value="Nelson">Nelson</option>
-          <option value="Wellington">Wellington</option>
-          <option value="Marlborough">Marlborough</option>
-          <option value="All">Show All</option>
-        </select>
-        <input type="button" id="rivers" name="rivers" value="Toggle Waterways"/>
-      </form>
-    </div>
+  <div class "dropdown" id="map_controls">
+  <button id="rivers" name="rivers" value="Toggle Waterways" type="button" class="btn btn-info btn-sm">Toggle Waterways</button>
+  <div class="btn-group">
+  <button type="button" class="btn btn-success dropdown-toggle btn-md" data-toggle="dropdown">
+    Select Region <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" id="region"  role="menu">
+    <li><a href="#" id ="None">Hide All</a></li>
+    <li class="divider"></li>
+    <li><a  href="#" id="Northland">Northland</a></li>
+    <li><a href="#" id="Auckland">Auckland</a></li>
+    <li><a href="#" id="Waikato">Waikato</a></li>
+    <li><a href="#" id="West Coast">West Coast</a></li>
+    <li><a href="#" id="Bay of Plenty">Bay of Plenty</a></li>
+    <li><a href="#" id="Canterbury">Canterbury</a></li>
+    <li><a href="#" id="Gisborne">Gisborne</a></li>
+    <li><a href="#" id="Otago">Otago</a></li>
+    <li><a href="#" id="Southland">Southland</a></li>
+    <li><a href="#" id="Hawkes Bay">Hawkes Bay</a></li>
+    <li><a href="#" id="Tasman">Tasman</a></li>
+    <li><a href="#" id="Taranaki">Taranaki</a></li>
+    <li><a href="#" id="Manawatu-Wanganui">Manawatu-Whanganui</a></li>
+    <li><a href="#" id="Nelson">Nelson</a></li>
+    <li><a href="#" id="Wellington">Wellington</a></li>
+    <li><a href="#" id="Malborough">Malborough</a></li>
+    <li class="divider"></li>
+    <li><a href="#" id="All">Show All</a></li>
+  </ul>
+</div>
+</div>
+
   </div>
 
 
@@ -159,22 +166,37 @@
       </div><!-- /.row -->
 {% endblocktrans %}
 {% endblock %}
+
 {%block page_specific_javascript %}
+  <script type="text/javascript">
+    
+    var points = {% autoescape off %} {{latLngs}}{% endautoescape %} 
+    console.log(points)
+    var markers = [];
+    
+  </script>
+    <script>
+ $( "#region" ).click(function(event){
+    event.preventDefault();
+    var regionName = event.target.id;
+   regionDropdown(regionName);
+
+ });
+
+ $("#map_controls").on('click','#rivers', function(event){
+ 	event.preventDefault();
+   displayRivers();
+   
+ });
+</script>
   
- 
-  <script type="text/javascript" src="{{ STATIC_URL }}js/map-coords.min.js"></script>
   <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&libraries=geometry&sensor=false"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}js/map-final-test.js"></script> 
-    
+  <script type="text/javascript" src="{{ STATIC_URL }}js/map-coords.min.js"></script>  
    <script type="text/javascript" src="{{ STATIC_URL }}js/maplabel-compiled.js"></script>
   
-  <script>
-      $("#map_controls").on('change','#region', function(event){
-          regionSelector();
-      });
+  
 
-      $("#map_controls").on('click','#rivers', function(event){
-          displayRivers();
-      });
-  </script>
+
+
 {% endblock %}

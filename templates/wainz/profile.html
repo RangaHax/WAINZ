@@ -16,7 +16,7 @@
 <div id='maps' style="height:450px; width:100%;"></div>
   </div>
   <div class='span12' id='img_details'>
-   Number of Images: {{images|length}} | <a href="{% url 'wainz.views.submit' %}">Upload Image</a> | <a href="{% url 'auth_password_change' %}">Change Password</a>
+   Number of Images: {{images|length}} | <a href="{% url "wainz.views.submit" %}">Upload Image</a> | <a href="{% url "auth_password_change" %}">Change Password</a>
   </div>
 <div class="ranga-top"></div>
 {% endblock %}

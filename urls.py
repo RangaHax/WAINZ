@@ -40,7 +40,7 @@ urlpatterns = patterns("",
     url(r'^accounts/profile/$','wainz.views.images_for_user'),
     
     #JSON Export
-    url(r'^api/export/$', 'wainz.rest.export'),
+    # url(r'^api/export/$', 'wainz.rest.export'),
     
     #Captcha URLS
     url(r'^captcha/', include('captcha.urls')),

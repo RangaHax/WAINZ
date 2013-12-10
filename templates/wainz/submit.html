@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block meta_title %}Upload{% endblock %}
 {% block main %}
-<div class="container" style="padding-top: 5%">
+<div class="container" style="padding-top: 2%">
 <div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">Submit</h1>
@@ -11,25 +11,25 @@
 		<div class="" id="loginModal">
 			<div class="modal-body col-lg-9">
 				<div class="well">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#login" data-toggle="tab">Single
-								Image</a></li>
-					</ul>
-					<div id="myTabContent" class="tab-content">
-						<div class="tab-pane active in" id="login">
+					
+						<div class="panel panel-info">
+					
+					<div id="myTabContent" class="panel-heading">
+						
 								<fieldset>
-									<div class="alert alert-block">
-									<form method="POST" enctype="multipart/form-data">
+									
+									<form  method="POST" enctype="multipart/form-data">
 										{% csrf_token %}
 										{{ form.as_p }}
 									<button id="submit_btn" class='btn btn-success' type="submit" value="Submit">Upload</button>
-									</form></div>
+									</form></div>	
 								</fieldset>
-						</div>
+							
+						
 
 					</div>
 
-				</div>
+				
 <!-- ============================================================================================================= -->
 <!-- ============================================================================================================= -->
 <!-- ============================================================================================================= -->

@@ -14,13 +14,15 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/maplabel-compiled.js"></script>
 <script>
  $( "#region" ).click(function(event){
-    console.log(event.target.id);
+    event.preventDefault();  
     var regionName = event.target.id;
    regionDropdown(regionName);
  });
 
  $("#map_controls").on('click','#rivers', function(event){
+  event.preventDefault();
    displayRivers();
+
  });
 </script>
 <script type="text/javascript">
@@ -127,7 +129,7 @@
 
 
 {% endblock %}
-
+<footer></footer>
 
 {% editable_loader %}
 
