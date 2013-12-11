@@ -9,3 +9,5 @@ def twitter_component(account):
 @register.inclusion_tag('wainz/components/image_list.html')
 def image_list_component(images_and_votes, images_length):
     return { "images_and_votes": images_and_votes, "images_length":images_length }
+
+

@@ -62,20 +62,25 @@
             </div>
             </div>
             <div class="panel-footer">
-            <div class='span12' id='img_details'>
-             {% if user.is_staff %} <a class='ttip' href='{% url "admin:wainz_image_change" img.id %}' rel='tooltip' title='Jump to admin panel'><i class='icon-wrench'></i></a> {% endif %}
-            <div>
+           
             <div class="btn-group">
+            <div>
+             <div class='span12' id='img_details'>
+             {% if user.is_staff %} 
+             <button type="button" id="moderate" class='btn btn-danger btn-sm' onclick="location.href='{% url "admin:wainz_image_change" img.id %}'" rel='tooltip' title='Jump to admin panel'>Admin: Change/Remove Image</button> 
+             {% endif %}
+            
             <button type="button" href='#' id='loc' class="btn btn-primary btn-sm">Toggle map</button>
              <button type="button" sytle="display:none;" href='#' id='river'class="btn btn-info btn-sm">Toggle Rivers</button>
               
             </div>
-
-            Location: ({{img.latitude}}, {{img.longitude}})</div>            
+            </div>            <div style="">
+            Location: ({{img.latitude}}, {{img.longitude}})</div>
             
             
+            <div style="">Submitted by: {{img.submitter}}</div>
+            <div style="">Uploaded: {{img.submission_date}}</div>
             
-            <div class=''>Uploaded: {{img.submission_date}}</div>
             </div> 
              
 
@@ -90,15 +95,15 @@
  </span>-->
 
 
- <div class='row-fluid'>
- <span id='tags' class='detail'>Tags
+ <div class='row-fluid' >
+ <span id='tags'  class='detail'>Tags
    {% for tag in image_tags %}
    <span class='tag'>| {{tag.tag_text}} </span>
    {% endfor %}
 
  </span> 
  {% if request.user.is_staff %}<a href='#' id='add_tag'>+</a>
-   <div id="tag_container">
+   <div id="tag_container" >
     <div >Add existing or new tags seperated by commas: 
       <input type='text' id='tag_text' style='width:25%' autocomplete='off'></input>
       {% csrf_token %}
