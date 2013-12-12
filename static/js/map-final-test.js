@@ -3,7 +3,7 @@
 //***********************************************************************//
 
 var map;
-var points = [];
+
 var styles; // map style options (roads, labels etc)
 var townLabels = false; // display labels
 var regions = [];
@@ -16,9 +16,10 @@ var regionFillColShow = '#2B547E';
 var regionStrokeColShow = '#2B547E';
 var regionFillOpacity = 0.05;
 var regionFillOpacityShow = 0.00;
-var regionFillOpacityMouse = 0.32;
+var regionFillOpacityMouse = 0.15;
 var regionStrokeWeight = 1;
-var regionStrokeWeightShow = 3.1;
+var regionStrokeWeightShow = 2;
+var showAll;
 google.maps.visualRefresh = true;
    
 
@@ -133,7 +134,7 @@ return info;
 function createMarkers(location, iconName, info) {
     var bool = false;
     if(iconName == null){
-        iconName = '../static/img/brown-drop.png';
+        iconName = '/static/img/brown-drop.png';
         
     }
 
@@ -580,6 +581,9 @@ function initialize() {
     // var marker = new google.maps.Marker({map:map, position: imgLocation});
     // marker.setMap(map);
     loadLayers();
+    if(showAll){
+        regionDropdown("All");
+    }
 }
     
 

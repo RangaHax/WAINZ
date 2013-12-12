@@ -3,17 +3,55 @@
 {% load wainz_tags %}
 {% block meta_title %}My Profile{% endblock %}
 {% block main %}
+<style>
+  #wrapper { position: relative; }
+  #map_controls { position: absolute; width: 100px; left: 5px; top: 5px;}
+</style>
     <div class="container" style="padding-top: 5%">
-
+      
 <div class='row-fluid'>
   <div class='span12'>
     <h2>Welcome {{user.username}}</h2>
     <!-- an ugly separator because the name looks goofy hanging out by itself -->
     <div style='background-color:#556; height:3px; margin-bottom:5px'></div>
   </div>
-  <div class='span11 well' style='text-align:center'>
+  <div class='span11 well' >
     
-<div id='maps' style="height:450px; width:100%;"></div>
+
+<div id="wrapper">
+<div id='map_canvas' style="height:500px; width:100%;"></div>   
+  <div class "dropdown" id="map_controls">
+  <button id="rivers" name="rivers" value="Toggle Waterways" type="button" class="btn btn-info btn-sm">Toggle Waterways</button>
+  <div class="btn-group">
+  <button type="button" class="btn btn-success dropdown-toggle btn-md" data-toggle="dropdown">
+    Select Region <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" id="region"  role="menu">
+    <li><a href="#" id ="None">Hide All</a></li>
+    <li class="divider"></li>
+    <li><a  href="#" id="Northland">Northland</a></li>
+    <li><a href="#" id="Auckland">Auckland</a></li>
+    <li><a href="#" id="Waikato">Waikato</a></li>
+    <li><a href="#" id="West Coast">West Coast</a></li>
+    <li><a href="#" id="Bay of Plenty">Bay of Plenty</a></li>
+    <li><a href="#" id="Canterbury">Canterbury</a></li>
+    <li><a href="#" id="Gisborne">Gisborne</a></li>
+    <li><a href="#" id="Otago">Otago</a></li>
+    <li><a href="#" id="Southland">Southland</a></li>
+    <li><a href="#" id="Hawkes Bay">Hawkes Bay</a></li>
+    <li><a href="#" id="Tasman">Tasman</a></li>
+    <li><a href="#" id="Taranaki">Taranaki</a></li>
+    <li><a href="#" id="Manawatu-Wanganui">Manawatu-Whanganui</a></li>
+    <li><a href="#" id="Nelson">Nelson</a></li>
+    <li><a href="#" id="Wellington">Wellington</a></li>
+    <li><a href="#" id="Malborough">Malborough</a></li>
+    <li class="divider"></li>
+    <li><a href="#" id="All">Show All</a></li>
+  </ul>
+</div>
+</div>
+
+</div>
   </div>
   <div class='span12' id='img_details'>
    Number of Images: {{images|length}} | <a href="{% url "wainz.views.submit" %}">Upload Image</a> | <a href="{% url "auth_password_change" %}">Change Password</a>
@@ -21,21 +59,32 @@
 <div class="ranga-top"></div>
 {% endblock %}
 
-{% block page_specific_javascript %}
-
+{% block javascriptincludes %}
+<script type="text/javascript">
+  {% autoescape off %} 
+  var points = {{latLngs}}
+  var showAll= true;
+  {% endautoescape %} 
+</script>
 <script type='text/javacript' src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js'></script>
 <script type="text/javascript"
-      src="//maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&amp;sensor=true"></script>
-<script type="text/javascript">
-var jsImages= new Array();
-{% for img in images %}
-var pt = new google.maps.LatLng({{img.latitude}}, {{img.longitude}})
-jsImages.push(pt)
-console.log(pt)
-{% endfor %}	 
+      <script type="text/javascript" src="{{ STATIC_URL }}js/map-coords.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAwwi-pYumS3O9OxbscA3pbDb_MPuWA6Eo&libraries=geometry&sensor=false"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/map-final-test.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/maplabel-compiled.js"></script>
+<script>
+ $( "#region" ).click(function(event){
+    event.preventDefault();  
+    var regionName = event.target.id;
+   regionDropdown(regionName);
+
+ });
+
+ $("#map_controls").on('click','#rivers', function(event){
+  event.preventDefault();
+   displayRivers();
+
+ });
 </script>
-
-
-
-<script type='text/javascript' src='{{ STATIC_URL }}js/profile.js'></script>
+<script type="text/javascript">regionDropdown("All");</script>
 {% endblock %}

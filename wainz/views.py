@@ -138,8 +138,12 @@ def images_for_user(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('home'))
     else:
+
+      
+      
       images = Image.objects.filter(submitter_id = request.user.id).order_by('-submission_date')[0:10000]
-      return render_to_response('wainz/profile.html', {'images':images} , context_instance = RequestContext(request))
+      points = [search_utils.to_map_point(image) for image in images]  
+      return render_to_response('wainz/profile.html', {'images':images,"latLngs":points} , context_instance = RequestContext(request))
 
 
 def image_list(request):
